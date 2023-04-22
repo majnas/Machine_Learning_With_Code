@@ -1,0 +1,5 @@
+dataset_dir: "./dataset"
+n_state: 2
+n_observations: 10
+n_emission: 10 # each 18 degree in a bin
+
