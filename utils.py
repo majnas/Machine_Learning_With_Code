@@ -5,11 +5,15 @@ import numpy as np
 
 class Preprocess:
     def __init__(self, data_path: str, n_emission: int = 10) -> None:
-        data = np.load(data_path)
+        data = np.load(data_path, allow_pickle=True)
         self.n_emission = n_emission
-        self.raw_samples = []
-        for points, label in zip(data["points"], data["labels"]):
-            self.raw_samples.append({"points": points, "label": label})
+        self.raw_train_samples = []
+        for points, label in zip(data["points_train"], data["labels_train"]):
+            self.raw_train_samples.append({"points": points, "label": label})
+
+        self.raw_test_samples = []
+        for points, label in zip(data["points_test"], data["labels_test"]):
+            self.raw_test_samples.append({"points": points, "label": label})
 
     def extract_observations(self, sample):
         sample_points = sample["points"]
@@ -46,17 +50,18 @@ class Preprocess:
         features = [f"E{int(f // emmision_span)}" for f in features]
         return features
     
+    def call_single_sample(self, sample):
+        observations = self.extract_observations(sample)
+        observations = self.quantize_observation(observations)
+        return {"observations": observations, "label": sample["label"]}
 
-    def preprocess(self):
-        self.samples = []
-        for sample in self.raw_samples:
-            observations = self.extract_observations(sample)
-            observations = self.quantize_observation(observations)
-            self.samples.append({"observations": observations, "label": sample["label"]})
-        np.random.shuffle(self.samples)        
 
+    def __call__(self):
+        self.train_samples = [self.call_single_sample(sample) for sample in self.raw_train_samples]
+        np.random.shuffle(self.train_samples)
+        self.test_samples = [self.call_single_sample(sample) for sample in self.raw_test_samples]
 
 if __name__ == "__main__":
-    pp = Preprocess("data.npz")
+    pp = Preprocess("./dataset/data.npz")
     pp.preprocess()
-    print(pp.samples)
+    print(pp.train_samples)
