@@ -4,12 +4,12 @@
 - Before starting set values in config.yaml file
 ```
 dataset_dir: "./dataset"
-imgsz: 480
+imgsz: 480              # dataset image size 480x480
 n_train_samples_per_class: 800
 n_test_samples_per_class: 200
-n_state: 2
-n_observations: 5
-n_emission: 10 # each 18 degree in each bin
+n_state: 2              # number of classes (circle and square)
+n_observations: 5       # number of points on contour of each shape
+n_emission: 10          # each 180/10 = 18 degree in each bin
 ```
 
 - To create circle and square images 
