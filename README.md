@@ -19,25 +19,16 @@ python create_imageas.py
 
 Sample images
 <div align="center">
-  <img src="./data/non_ideal_circle_0.png" height="480">
-</div>
-<div align="center">
-  <img src="./data/non_ideal_circle_1.png" height="480">
-</div>
-<div align="center">
-  <img src="./data/non_ideal_circle_2.png" height="480">
+  <img src="./data/non_ideal_circle_0.png" height="240">
+  <img src="./data/non_ideal_circle_1.png" height="240">
+  <img src="./data/non_ideal_circle_2.png" height="240">
 </div>
 
 <div align="center">
-  <img src="./data/non_ideal_square_0.png" height="480">
+  <img src="./data/non_ideal_square_0.png" height="240">
+  <img src="./data/non_ideal_square_1.png" height="240">
+  <img src="./data/non_ideal_square_2.png" height="240">
 </div>
-<div align="center">
-  <img src="./data/non_ideal_square_1.png" height="480">
-</div>
-<div align="center">
-  <img src="./data/non_ideal_square_2.png" height="480">
-</div>
-
 
 - To create dataset in npz format
 ```python
