@@ -28,9 +28,6 @@ class HMM:
     def predict(self, observations: List):
         n_observation = len(observations)
         observation_probabilities = {-1: self.pi}
-        # print("self.pi", self.pi)
-        # print("observation_probabilities", observation_probabilities)
-
         for current_observation_idx, observation in enumerate(observations):
             previous_observation_idx = current_observation_idx - 1
             for current_state_idx in range(self.n_state):
@@ -60,28 +57,30 @@ class HMM:
     def save(self, path: str = "model.npz"):
         if not path.endswith(".npz"):
             path += ".npz"
-    
-        np.savez(path, 
-            n_state = self.n_state,
-            n_emission = self.n_emission,
-            emission = self.emission,
-            pi = self.pi,
-            transition = self.transition)
+        with open(path, 'wb') as file:
+            np.savez_compressed(file,
+                                n_state=self.n_state,
+                                n_emission=self.n_emission,
+                                emission=self.emission,
+                                pi=self.pi,
+                                transition=self.transition)
 
     def load(self, path: str = "model.npz"):
-        data = np.load(path, allow_pickle=True)
-        n_state = data["n_state"]
-        n_emission = data["n_emission"]
-        
-        if (self.n_state!=n_state):
-            print(f"n_state is incompatible {self.n_state} vs {n_state}")
+        with open(path, 'rb') as file:
+            data = np.load(file, allow_pickle=True)
+            n_state = data["n_state"]
+            n_emission = data["n_emission"]
+            
+            if (self.n_state!=n_state):
+                print(f"n_state is incompatible {self.n_state} vs {n_state}")
 
-        if (self.n_emission!=n_emission):
-            print(f"n_emission is incompatible {self.n_emission} vs {n_emission}")
+            if (self.n_emission!=n_emission):
+                print(f"n_emission is incompatible {self.n_emission} vs {n_emission}")
 
-        self.emission = data["emission"]
-        self.pi = data["pi"]
-        self.transition = data["transition"]
+            self.emission = data["emission"].item()
+            self.pi = data["pi"].item() 
+            self.transition = data["transition"].item()
+
 
     def __str__(self) -> str:
         msg = f"HMM Properties:\n"
