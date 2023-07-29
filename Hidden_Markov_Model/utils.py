@@ -3,6 +3,38 @@ import math
 import numpy as np
 
 
+"""
+A class that represents a configuration object.
+
+Attributes:
+    * Any attributes that are passed to the `__init__` method.
+
+Methods:
+    * Any methods that are needed to access or modify the attributes of the object.
+"""
+
+class Config:
+    def __init__(self, **kwargs):
+        """
+        Initializes a Config object.
+
+        Args:
+            * Any attributes that are passed to the `__init__` method.
+        """
+
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+    def __str__(self):
+        """
+        Prints all attributes each in a separate line.
+        """
+
+        string = ""
+        for key, value in self.__dict__.items():
+            string += f"{key}: {value}\n"
+        return string
+
 class Preprocess:
     def __init__(self, data_path: str, n_emission: int = 10) -> None:
         data = np.load(data_path, allow_pickle=True)

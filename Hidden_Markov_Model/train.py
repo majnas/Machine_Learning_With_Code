@@ -8,16 +8,19 @@ import utils
 import create_dataset
 from hmm import HMM
 
+
+
 def main(args):
     with open(args.cfg, "r") as f:
-        config = yaml.load(f, Loader=yaml.FullLoader)
+        config_data = yaml.load(f, Loader=yaml.FullLoader)
+    config = utils.Config(**config_data)
     print(config)
 
-    data_path = os.path.join(config["dataset_dir"], "data.npz")
-    pp = utils.Preprocess(data_path=data_path, n_emission=config["n_emission"])
+    data_path = os.path.join(config.dataset_dir, "data.npz")
+    pp = utils.Preprocess(data_path=data_path, n_emission=config.n_emission)
     pp()
 
-    hmm_obj = HMM(n_state=config["n_state"], n_emission=config["n_emission"])
+    hmm_obj = HMM(n_state=config.n_state, n_emission=config.n_emission)
     hmm_obj.fit(samples=pp.train_samples)
     print(hmm_obj)
 
@@ -41,7 +44,7 @@ def main(args):
     
 
     # img_path = "./dataset/test/square/non_ideal_square_0.png"
-    # status, sample = create_dataset.get_sample(img_path=img_path, n_observations=config["n_observations"])
+    # status, sample = create_dataset.get_sample(img_path=img_path, n_observations=config.n_observations)
     # if status:
     #     sample = pp.call_single_sample(sample=sample)
     #     winner_class, state_vote = hmm_obj.predict(observations=sample["observations"])
