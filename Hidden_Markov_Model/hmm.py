@@ -84,11 +84,12 @@ class HMM:
         self.transition = data["transition"]
 
     def __str__(self) -> str:
-        msg = f"HMM n_state:{self.n_state}"
-        msg += f", n_emission:{self.n_emission}"
-        msg += f", pi:{self.pi}"
-        msg += f", emission:{self.emission}"
-        msg += f", transition:{self.transition}"
+        msg = f"HMM Properties:\n"
+        msg += f"n_state: {self.n_state}\n"
+        msg += f"n_emission: {self.n_emission}\n"
+        msg += f"pi: {self.pi}\n"
+        msg += f"emission: {self.emission}\n"
+        msg += f"transition: {self.transition}\n"
         return msg
 
 
