@@ -37,10 +37,11 @@ python create_dataset.py
 ```
 
 <div align="center">
-  <img src="./data/c0.png" height="240">
-  <img src="./data/c1.png" height="240">
-  <img src="./data/c2.png" height="240">
+  <img src="./data/c0.png" height="240" style="border: 1px solid black;">
+  <img src="./data/c1.png" height="240" style="border: 1px solid black;">
+  <img src="./data/c2.png" height="240" style="border: 1px solid black;">
 </div>
+
 
 <div align="center">
   <img src="./data/s0.png" height="240">
