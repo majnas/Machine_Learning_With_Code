@@ -5,7 +5,6 @@ from rich import print
 from sklearn.metrics import accuracy_score, confusion_matrix
 
 import utils
-import create_dataset
 from hmm import HMM
 
 
@@ -17,16 +16,13 @@ def main(args):
     print(config)
 
     data_path = os.path.join(config.dataset_dir, "data.npz")
-    pp = utils.Preprocess(data_path=data_path, n_emission=config.n_emission)
-    pp()
+    pp = utils.Preprocess(n_emission=config.n_emission)
+    pp(data_path=data_path)
 
     hmm_obj = HMM(n_state=config.n_state, n_emission=config.n_emission)
     hmm_obj.fit(samples=pp.train_samples)
+    hmm_obj.save()
     print(hmm_obj)
-
-    # hmm_obj.save()
-    # hmm_obj.load()
-    # print(hmm_obj)
 
     y_pred = []
     y_true = []
@@ -34,7 +30,6 @@ def main(args):
         winner_class, state_vote = hmm_obj.predict(observations=sample["observations"])
         y_pred.append(winner_class)
         y_true.append(sample["label"])
-        # print("pred_class", winner_class, "gt_class", sample["label"])
 
     acc = accuracy_score(y_true=y_true, y_pred=y_pred)
     print(f"accuracy={acc}")
@@ -42,14 +37,6 @@ def main(args):
     cm = confusion_matrix(y_true=y_true, y_pred=y_pred)
     print(f"confusion matrix=\n{cm}")
     
-
-    img_path = "./dataset/test/square/non_ideal_square_0.png"
-    status, sample = create_dataset.get_sample(img_path=img_path, n_observations=config.n_observations, label=config.classes.index("square"))
-    if status:
-        sample = pp.preprocess_single_sample(sample=sample)
-        winner_class, state_vote = hmm_obj.predict(observations=sample["observations"])
-        print("pred_class", winner_class, "gt_class", sample["label"], "state_vote", state_vote)
-        
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
