@@ -5,13 +5,14 @@ import yaml
 import argparse
 from rich import print
 from typing import Dict
+import tqdm
 
 
 def create_square(config: Dict, part: str):
     square_dir = os.path.join(config["dataset_dir"], part, "square")
     os.makedirs(square_dir, exist_ok=True)
 
-    for i in range(config[f"n_{part}_samples_per_class"]):
+    for i in tqdm.tqdm(range(config[f"n_{part}_samples_per_class"]), desc=f"Create square {part} part:"):
         # Create a new blank image for each iteration
         img = Image.new('RGB', (config["imgsz"], config["imgsz"]), color='white')
 
@@ -59,7 +60,7 @@ def create_cirlce(config: Dict, part: str):
     circle_dir = os.path.join(config["dataset_dir"], part, "circle")
     os.makedirs(circle_dir, exist_ok=True)
 
-    for i in range(config[f"n_{part}_samples_per_class"]):
+    for i in tqdm.tqdm(range(config[f"n_{part}_samples_per_class"]), desc=f"Create circle {part} part:"):
         # Create a new blank image for each iteration
         img = Image.new('RGB', (config["imgsz"], config["imgsz"]), color='white')
 
