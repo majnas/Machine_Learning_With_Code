@@ -19,15 +19,16 @@ python create_imageas.py
 
 Sample images
 <div align="center">
-  <img src="./data/non_ideal_circle_0.png" height="240">
-  <img src="./data/non_ideal_circle_1.png" height="240">
-  <img src="./data/non_ideal_circle_2.png" height="240">
+  <kbd style="width: 2px"><img src="./data/non_ideal_circle_0.png" height="240"></kbd>
+  <kbd style="width: 2px"><img src="./data/non_ideal_circle_1.png" height="240"></kbd>
+  <kbd style="width: 2px"><img src="./data/non_ideal_circle_2.png" height="240"></kbd>
 </div>
 
 <div align="center">
-  <img src="./data/non_ideal_square_0.png" height="240">
-  <img src="./data/non_ideal_square_1.png" height="240">
-  <img src="./data/non_ideal_square_2.png" height="240">
+  <kbd style="width: 2px"><img src="./data/non_ideal_square_0.png" height="240"></kbd>
+  <kbd style="width: 2px"><img src="./data/non_ideal_square_1.png" height="240"></kbd>
+  <kbd style="width: 2px"><img src="./data/non_ideal_square_2.png" height="240"></kbd>
+
 </div>
 
 - To create dataset in npz format
@@ -37,16 +38,15 @@ python create_dataset.py
 ```
 
 <div align="center">
-  <img src="./data/c0.png" height="240" style="border: 1px solid black;">
-  <img src="./data/c1.png" height="240" style="border: 1px solid black;">
-  <img src="./data/c2.png" height="240" style="border: 1px solid black;">
+  <kbd style="width: 2px"><img src="./data/c0.png" height="240"></kbd>
+  <kbd style="width: 2px"><img src="./data/c1.png" height="240"></kbd>
+  <kbd style="width: 2px"><img src="./data/c2.png" height="240"></kbd>
 </div>
 
-
 <div align="center">
-  <img src="./data/s0.png" height="240">
-  <img src="./data/s1.png" height="240">
-  <img src="./data/s2.png" height="240">
+  <kbd style="width: 2px"><img src="./data/s0.png" height="240"></kbd>
+  <kbd style="width: 2px"><img src="./data/s1.png" height="240"></kbd>
+  <kbd style="width: 2px"><img src="./data/s2.png" height="240"></kbd>
 </div>
 
 
