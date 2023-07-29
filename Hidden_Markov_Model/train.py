@@ -3,7 +3,7 @@ import yaml
 import argparse
 from rich import print
 from sklearn.metrics import accuracy_score, confusion_matrix
-
+import numpy as np
 import utils
 from hmm import HMM
 
