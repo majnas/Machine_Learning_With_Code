@@ -35,25 +35,21 @@ class Config:
             string += f"{key}: {value}\n"
         return string
 
-class Preprocess:
-    def __init__(self, data_path: str, n_emission: int = 10) -> None:
-        data = np.load(data_path, allow_pickle=True)
-        self.n_emission = n_emission
-        self.raw_train_samples = []
-        for points, label in zip(data["points_train"], data["labels_train"]):
-            self.raw_train_samples.append({"points": points, "label": label})
 
-        self.raw_test_samples = []
-        for points, label in zip(data["points_test"], data["labels_test"]):
-            self.raw_test_samples.append({"points": points, "label": label})
+
+
+class Preprocess:
+    def __init__(self, n_emission: int = 10) -> None:
+        self.n_emission = n_emission
 
     def extract_observations(self, sample):
         sample_points = sample["points"]
         
-        # Add first to the end of array
+        # Add first point to the end of array
         sample_points = np.concatenate((sample_points, sample_points[0:1]))
         n_points = len(sample_points)
         
+        #? Calculate the degree of each point regarding the next point
         degrees = []
         for i in range(1,n_points):
             x0,y0 = sample_points[i-1]
@@ -82,16 +78,27 @@ class Preprocess:
         features = [f"E{int(f // emmision_span)}" for f in features]
         return features
     
-    def call_single_sample(self, sample):
+    def preprocess_single_sample(self, sample):
         observations = self.extract_observations(sample)
         observations = self.quantize_observation(observations)
         return {"observations": observations, "label": sample["label"]}
 
 
-    def __call__(self):
-        self.train_samples = [self.call_single_sample(sample) for sample in self.raw_train_samples]
+    def __call__(self, data_path: str = None):
+        # Load the data
+        data = np.load(data_path, allow_pickle=True)
+
+        self.raw_train_samples = []
+        for points, label in zip(data["points_train"], data["labels_train"]):
+            self.raw_train_samples.append({"points": points, "label": label})
+
+        self.raw_test_samples = []
+        for points, label in zip(data["points_test"], data["labels_test"]):
+            self.raw_test_samples.append({"points": points, "label": label})
+
+        self.train_samples = [self.preprocess_single_sample(sample) for sample in self.raw_train_samples]
         np.random.shuffle(self.train_samples)
-        self.test_samples = [self.call_single_sample(sample) for sample in self.raw_test_samples]
+        self.test_samples = [self.preprocess_single_sample(sample) for sample in self.raw_test_samples]
 
 if __name__ == "__main__":
     pp = Preprocess("./dataset/data.npz")
