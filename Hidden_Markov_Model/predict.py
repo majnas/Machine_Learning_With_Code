@@ -30,7 +30,11 @@ def main(args):
         img = cv2.imread(args.img_path)
         cv2.putText(img, f"Prediction: {config.classes[winner_class]}", (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,0,0), 2)
         cv2.putText(img, f"State_vote: {state_vote}", (20, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,0,0), 2)
-        cv2.imshow(os.path.basename(args.img_path), img)
+        basename = os.path.basename(args.img_path)
+        cv2.imshow(basename, img)
+        file_name, extension = os.path.splitext(basename)
+        img_path = file_name + "_pred" + extension
+        cv2.imwrite(img_path, img)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
