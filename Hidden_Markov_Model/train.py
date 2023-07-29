@@ -43,12 +43,12 @@ def main(args):
     print(f"confusion matrix=\n{cm}")
     
 
-    # img_path = "./dataset/test/square/non_ideal_square_0.png"
-    # status, sample = create_dataset.get_sample(img_path=img_path, n_observations=config.n_observations)
-    # if status:
-    #     sample = pp.call_single_sample(sample=sample)
-    #     winner_class, state_vote = hmm_obj.predict(observations=sample["observations"])
-    #     print("pred_class", winner_class, "gt_class", sample["label"], "state_vote", state_vote)
+    img_path = "./dataset/test/square/non_ideal_square_0.png"
+    status, sample = create_dataset.get_sample(img_path=img_path, n_observations=config.n_observations, label=config.classes.index("square"))
+    if status:
+        sample = pp.preprocess_single_sample(sample=sample)
+        winner_class, state_vote = hmm_obj.predict(observations=sample["observations"])
+        print("pred_class", winner_class, "gt_class", sample["label"], "state_vote", state_vote)
         
 
 if __name__ == "__main__":

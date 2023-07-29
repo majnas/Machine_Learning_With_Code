@@ -5,3 +5,6 @@ n_test_samples_per_class: 200
 n_state: 2              # number of classes (circle and square)
 n_observations: 8       # number of points on contour of each shape
 n_emission: 10          # each 180/10 = 18 degree in each bin
+classes:
+   - "circle"
+   - "square"
