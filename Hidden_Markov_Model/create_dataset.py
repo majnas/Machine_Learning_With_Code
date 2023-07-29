@@ -1,6 +1,6 @@
 import os
 import cv2
-import glob
+import pathlib
 import numpy as np
 import yaml
 import argparse
@@ -58,7 +58,7 @@ def main(args):
     labels = {"train": [], "test": []}
     for class_id, class_name in enumerate(["circle", "square"]):
         for part in ["train", "test"]:
-            img_path_list = glob.glob(os.path.join(config.dataset_dir, part, class_name, "*.png"))
+            img_path_list = [str(path) for path in pathlib.Path(config.dataset_dir).glob(f"{part}/{class_name}/*.png")]  
             for img_path in tqdm.tqdm(img_path_list, desc=f"{class_name} {part} part: "):
                 status, sample = get_sample(img_path=img_path, n_observations=config.n_observations)
                 if status:
