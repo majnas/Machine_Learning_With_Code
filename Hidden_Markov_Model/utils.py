@@ -1,12 +1,6 @@
 import os
-import yaml
-import argparse
 from rich import print
-from sklearn.metrics import accuracy_score, confusion_matrix
-
-import utils
-from hmm import HMM
-
+import numpy as np
 
 
 """
