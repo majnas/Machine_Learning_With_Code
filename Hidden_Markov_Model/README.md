@@ -31,9 +31,23 @@ Sample images
 </div>
 
 - To create dataset in npz format
+- This script find n = n_observation points from object countour and create a dataset from points and label for each sample
 ```python
 python create_dataset.py
 ```
+
+<div align="center">
+  <img src="./data/c0.png" height="240">
+  <img src="./data/c1.png" height="240">
+  <img src="./data/c2.png" height="240">
+</div>
+
+<div align="center">
+  <img src="./data/s0.png" height="240">
+  <img src="./data/s1.png" height="240">
+  <img src="./data/s2.png" height="240">
+</div>
+
 
 - To train and test model
 ```python
