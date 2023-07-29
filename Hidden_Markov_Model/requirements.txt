@@ -1,4 +1,3 @@
-glob3
 tqdm
 Pillow
 PyYAML
