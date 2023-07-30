@@ -1,5 +1,45 @@
 ## Object classification using Hidden Markov Model (HMM)
 
+# 
+TO classify images to "circle" or "square" we have used Hidden Markov Model algorithm. The HMM classify the an image based on observations from the image. We have modeled the problem as following steps.
+
+- Extracting features from image
+   - Convert RGB image to Gray image
+   - Finding edges in image using *Canny* edge detector.
+   - Finding countour in image
+   - Selecting n = n_observations points from all countour points almost equally spaces
+
+- Preprocess features
+  For each image we have n = n_observations points as (x,y), X = {(x_1, y_1), (x_2, y_2), ... ,(x_n, y_n)}. we calculate the angle for each point regarding the next point as figure 1. Then we calculate the angle difference for each adjecent points. 
+
+  - Calculate angle for each point
+      ```math
+      degree = \math{atan2}(y_1 - y_0, x_1 - x_0) * 180 / \pi
+      ```
+  - Calculate angle difference for each point as observation
+            diff_degree = degrees[i-1] - degrees[i]
+          if diff_degree < 0:
+              diff_degree += 360
+
+          if diff_degree > 180:
+              diff_degree -= 180
+
+          diff_degrees.append(diff_degree)
+
+
+- Train HMM model 
+  - **Calculate Transition matrix:** The transition matrix in an HMM is a square matrix that shows the probability of transitioning from one state to another. In this case, the states would be "circle" and "square". The transition matrix would be calculated by counting the number of times a transition from one state to another occurs in the training data, and then normalizing the counts. Hence we don't have any transition between classes the Transitio matrix will be identity matrix.
+
+  - **Calculate Emision matrix:** The emission matrix in an HMM is a square matrix that shows the probability of emitting an observation from a particular state. In this case, the observations would be the angle differences between adjacent points in the image. The emission matrix would be calculated by counting the number of times each angle difference is emitted from each state in the training data, and then normalizing the counts.
+
+  - **Calculate prior probabilities:** The prior probabilities in an HMM are the probabilities of starting in a particular state. In this case, the prior probabilities would be the probabilities of starting with a circle or a square. The prior probabilities would be calculated by counting the number of times each state occurs in the first observation in the training data, and then normalizing the counts.
+
+Once the transition matrix, emission matrix, and prior probabilities have been calculated, the HMM can be used to classify new images. To do this, the HMM would be applied to the new image, and the state with the highest probability would be the predicted class of the image.
+
+
+
+#
+
 ### How to use
 - Before starting set values in config.yaml file
 ```yaml
