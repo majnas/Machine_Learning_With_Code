@@ -50,28 +50,28 @@ class Preprocess:
         sample_points = np.concatenate((sample_points, sample_points[0:1]))
         n_points = len(sample_points)
         
-        #? Calculate the degree of each point regarding the next point
-        degrees = []
+        #? Calculate the angle of each point regarding the next point
+        angles = []
         for i in range(1,n_points):
             x0,y0 = sample_points[i-1]
             x1,y1 = sample_points[i]
-            degree = math.atan2(y1-y0, x1-x0) * 180 / np.pi
-            if degree < 0:
-                degree += 360
-            degrees.append(degree)
+            angle = math.atan2(y1-y0, x1-x0) * 180 / np.pi
+            if angle < 0:
+                angle += 360
+            angles.append(angle)
 
-        diff_degrees = []
-        degrees = np.concatenate((degrees, degrees[0:1]))
+        diff_angles = []
+        angles = np.concatenate((angles, angles[0:1]))
         for i in range(1,n_points):
-            diff_degree = degrees[i-1] - degrees[i]
-            if diff_degree < 0:
-                diff_degree += 360
+            diff_angle = angles[i-1] - angles[i]
+            if diff_angle < 0:
+                diff_angle += 360
 
-            if diff_degree > 180:
-                diff_degree -= 180
+            if diff_angle > 180:
+                diff_angle -= 180
 
-            diff_degrees.append(diff_degree)
-        return diff_degrees
+            diff_angles.append(diff_angle)
+        return diff_angles
 
 
     def quantize_observation(self, features):
