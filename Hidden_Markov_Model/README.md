@@ -55,3 +55,10 @@ python create_dataset.py
 python train.py
 ```
 
+
+- To predict class of a given image used the saved HMM model
+```python
+python predict.py
+python predict.py -i /path/to/image/
+python predict.py -i dataset/test/circle/non_ideal_circle_51.png
+```
