@@ -2,7 +2,7 @@
 
 ### How to use
 - Before starting set values in config.yaml file
-```
+```yaml
 dataset_dir: "./dataset"
 imgsz: 480              # dataset image size 480x480
 n_train_samples_per_class: 800
