@@ -1,3 +1,6 @@
+<h1 align="center"> Still working on README ... </h1>
+
+
 ## Object classification using Hidden Markov Model (HMM)
 
 # 
