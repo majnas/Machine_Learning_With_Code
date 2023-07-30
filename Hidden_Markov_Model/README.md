@@ -107,3 +107,8 @@ python predict.py
 python predict.py -i /path/to/image/
 python predict.py -i dataset/test/circle/non_ideal_circle_51.png
 ```
+
+<div align="center">
+  <kbd style="width: 2px"><img src="./data/square_pred.png" height="360"></kbd>
+  <kbd style="width: 2px"><img src="./data/circle_pred.png" height="360"></kbd>
+</div>
