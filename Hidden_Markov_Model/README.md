@@ -10,22 +10,18 @@ TO classify images to "circle" or "square" we have used Hidden Markov Model algo
    - Selecting n = n_observations points from all countour points almost equally spaces
 
 - Preprocess features
-  For each image we have n = n_observations points as (x,y), X = {(x_1, y_1), (x_2, y_2), ... ,(x_n, y_n)}. we calculate the angle for each point regarding the next point as figure 1. Then we calculate the angle difference for each adjecent points. 
+  For each image we have n = *n_observations* points as (x,y), X = {(x_1, y_1), (x_2, y_2), ... ,(x_n, y_n)}. we calculate the angle for each point regarding the next point as figure 1. Then we calculate the angle difference for each adjecent points. 
 
   - Calculate angle for each point
-      ```math
-      degree = \math{atan2}(y_1 - y_0, x_1 - x_0) * 180 / \pi
-      ```
+     ```math
+      $$
+      \text{Angle}_i = \text{atan2}(y_{i+1} - y_i, x_{i+1} - x_i) \times \frac{180}{\pi}
+      $$
+     ```
   - Calculate angle difference for each point as observation
-            diff_degree = degrees[i-1] - degrees[i]
-          if diff_degree < 0:
-              diff_degree += 360
-
-          if diff_degree > 180:
-              diff_degree -= 180
-
-          diff_degrees.append(diff_degree)
-
+    ```math
+    $ \text{Diff_Angle}_i = (Angle_i - Aingle_{i-1}) $
+    ```
 
 - Train HMM model 
   - **Calculate Transition matrix:** The transition matrix in an HMM is a square matrix that shows the probability of transitioning from one state to another. In this case, the states would be "circle" and "square". The transition matrix would be calculated by counting the number of times a transition from one state to another occurs in the training data, and then normalizing the counts. Hence we don't have any transition between classes the Transitio matrix will be identity matrix.
