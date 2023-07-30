@@ -12,6 +12,12 @@ TO classify images to "circle" or "square" we have used Hidden Markov Model algo
 - Preprocess features
   For each image we have n = *n_observations* points as (x,y), X = {(x_1, y_1), (x_2, y_2), ... ,(x_n, y_n)}. we calculate the angle for each point regarding the next point as figure 1. Then we calculate the angle difference for each adjecent points. 
 
+  <div align="center">
+  <kbd style="width: 2px"><img src="./data/angle_circle.png" height="240"></kbd>
+  <kbd style="width: 2px"><img src="./data/angle_square.png" height="240"></kbd>
+  </div>
+
+
   - Calculate angle for each point
      ```math
       $$
