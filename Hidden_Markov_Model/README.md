@@ -31,10 +31,22 @@ TO classify images to "circle" or "square" we have used Hidden Markov Model algo
 
 - Train HMM model 
   - **Calculate Transition matrix:** The transition matrix in an HMM is a square matrix that shows the probability of transitioning from one state to another. In this case, the states would be "circle" and "square". The transition matrix would be calculated by counting the number of times a transition from one state to another occurs in the training data, and then normalizing the counts. Hence we don't have any transition between classes the Transitio matrix will be identity matrix.
+    ```python
+    self.transition = {sA: {sB: 0 for sB in range(n_state)} for sA in range(n_state)}
+    for sidx in range(n_state):
+       self.transition[sidx][sidx]=1
+    ```
 
   - **Calculate Emision matrix:** The emission matrix in an HMM is a square matrix that shows the probability of emitting an observation from a particular state. In this case, the observations would be the angle differences between adjacent points in the image. The emission matrix would be calculated by counting the number of times each angle difference is emitted from each state in the training data, and then normalizing the counts.
+    ```python
+     for state_idx in range(self.n_state):
+         self.emission[state_idx] = {f"E{ne}":0 for ne in range(n_emission)}
+    ```
 
   - **Calculate prior probabilities:** The prior probabilities in an HMM are the probabilities of starting in a particular state. In this case, the prior probabilities would be the probabilities of starting with a circle or a square. The prior probabilities would be calculated by counting the number of times each state occurs in the first observation in the training data, and then normalizing the counts.
+    ```python
+    self.pi = {i:1/n_state for i in range(n_state)}
+    ```
 
 Once the transition matrix, emission matrix, and prior probabilities have been calculated, the HMM can be used to classify new images. To do this, the HMM would be applied to the new image, and the state with the highest probability would be the predicted class of the image.
 
@@ -48,12 +60,11 @@ Once the transition matrix, emission matrix, and prior probabilities have been c
 
    - Initialization: Initialize the Viterbi trellis with probabilities from the initial state distribution (self.pi in our code) for each state ("circle" and "square").
       ```python
-        # Initialize the Viterbi trellis with probabilities from the initial state distribution
+      # Initialize the Viterbi trellis with probabilities from the initial state distribution
       observation_probabilities = {-1: self.pi}
       ```
 
   - Iteration: Iterate through each observation (angle difference) in the   sequence. For each observation and each state, calculate the probability of being in that state at the current observation step. This is done by considering the probabilities of transitioning from all possible previous states to the current state, multiplied by the emission probability of the current observation given the current state.
-
     ```python
     # Iterate through each observation (angle difference) in the sequence
     for current_observation_idx, observation in enumerate(observations):
