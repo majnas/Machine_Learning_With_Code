@@ -1,15 +1,15 @@
 ## Object classification using Hidden Markov Model (HMM)
 
 # 
-TO classify images to "circle" or "square" we have used Hidden Markov Model algorithm. The HMM classify the an image based on observations from the image. We have modeled the problem as following steps.
+To classify images to "circle" or "square" we have used Hidden Markov Model algorithm. The HMM classify the an image based on observations from the image. We have modeled the problem as following steps.
 
-- Extracting features from image
+## Extracting features from image
    - Convert RGB image to Gray image
    - Finding edges in image using *Canny* edge detector.
    - Finding countour in image
    - Selecting n = n_observations points from all countour points almost equally spaces
 
-- Preprocess features
+## Preprocess features
   For each image we have n = *n_observations* points as (x,y), X = {(x_1, y_1), (x_2, y_2), ... ,(x_n, y_n)}. we calculate the angle for each point regarding the next point as following figure. Then we calculate the angle difference for each adjecent points. 
 
   <div align="center">
@@ -29,7 +29,7 @@ TO classify images to "circle" or "square" we have used Hidden Markov Model algo
     $ \text{Diff_Angle}_i = (Angle_i - Aingle_{i-1}) $
     ```
 
-- Train HMM model 
+## Train HMM model 
   - **Calculate Transition matrix:** The transition matrix in an HMM is a square matrix that shows the probability of transitioning from one state to another. In this case, the states would be "circle" and "square". The transition matrix would be calculated by counting the number of times a transition from one state to another occurs in the training data, and then normalizing the counts. Hence we don't have any transition between classes the Transitio matrix will be identity matrix.
     ```python
     self.transition = {sA: {sB: 0 for sB in range(n_state)} for sA in range(n_state)}
@@ -42,6 +42,16 @@ TO classify images to "circle" or "square" we have used Hidden Markov Model algo
      for state_idx in range(self.n_state):
          self.emission[state_idx] = {f"E{ne}":0 for ne in range(n_emission)}
     ```
+    ```python
+    for sample in samples:
+        observations = sample["observations"]
+        for ob in observations:
+            self.emission[sample['label']][ob] += 1 
+    
+    for state_idx in range(self.n_state):
+        totall = sum(self.emission[state_idx][key] for key in self.emission[state_idx])
+        self.emission[state_idx] = {k:v/totall for k,v in self.emission[state_idx].items()}
+    ```
 
   - **Calculate prior probabilities:** The prior probabilities in an HMM are the probabilities of starting in a particular state. In this case, the prior probabilities would be the probabilities of starting with a circle or a square. The prior probabilities would be calculated by counting the number of times each state occurs in the first observation in the training data, and then normalizing the counts.
     ```python
@@ -52,7 +62,7 @@ Once the transition matrix, emission matrix, and prior probabilities have been c
 
 
 
-- Predict using trained model
+## Predict using trained model
 
   The Viterbi algorithm is a dynamic programming algorithm that is commonly used with Hidden Markov Models to find the most likely sequence of hidden states given a sequence of observations. In our case, the hidden states are "circle" and "square," and the observations are the angle differences between adjacent points in the image.
 
