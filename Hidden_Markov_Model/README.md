@@ -101,7 +101,7 @@ Once the transition matrix, emission matrix, and prior probabilities have been c
     state_vote = {state_idx:0 for state_idx in range(self.n_state)}
     ```
 
-  - Vote Countingand Final Prediction: We are counting the votes for each state over the entire sequence of observations. This can help you determine which state has the most "votes" or support across the sequence. The state that receives the most votes or has the highest overall probability across the sequence is our final predicted state for the input image.
+  - Vote Counting and Final Prediction: We are counting the votes for each state over the entire sequence of observations. This can help you determine which state has the most "votes" or support across the sequence. The state that receives the most votes or has the highest overall probability across the sequence is our final predicted state for the input image.
     ```python
       for observation_idx in range(n_observation):
         observation_probabilities_state = observation_probabilities[observation_idx]
