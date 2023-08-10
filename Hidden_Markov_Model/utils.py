@@ -40,10 +40,33 @@ class Config:
 
 
 class Preprocess:
+    """
+    Preprocessing class for extracting observations and preparing samples for Hidden Markov Model (HMM) training.
+
+    Attributes:
+        n_emission (int): Number of possible emissions (quantized angle differences).
+
+    Methods:
+        __init__(n_emission): Initialize the Preprocess object with the specified number of emissions.
+        extract_observations(sample): Extract angle differences from a sample's points.
+        quantize_observation(features): Quantize a list of features into emissions.
+        preprocess_single_sample(sample): Preprocess a single sample by extracting observations and quantizing them.
+        __call__(data_path): Load data and preprocess samples from the specified data path.
+    """
     def __init__(self, n_emission: int = 10) -> None:
+        """Initialize the Preprocess object."""
         self.n_emission = n_emission
 
     def extract_observations(self, sample):
+        """
+        Extract angle differences from a sample's points.
+
+        Args:
+            sample (dict): Sample data containing "points" as an array of points.
+
+        Returns:
+            list: List of angle differences between adjacent points.
+        """
         sample_points = sample["points"]
         
         # Add first point to the end of array
@@ -75,18 +98,44 @@ class Preprocess:
 
 
     def quantize_observation(self, features):
+        """
+        Quantize a list of features into emissions.
+
+        Args:
+            features (list): List of numerical features (angle differences).
+
+        Returns:
+            list: List of quantized emissions.
+        """
         emmision_span = 180 // self.n_emission + 1
         features = [f"E{int(f // emmision_span)}" for f in features]
         return features
     
     def preprocess_single_sample(self, sample):
+        """
+        Preprocess a single sample by extracting observations and quantizing them.
+
+        Args:
+            sample (dict): Sample data containing "points" and "label".
+
+        Returns:
+            dict: Preprocessed sample with "observations" and "label".
+        """
         observations = self.extract_observations(sample)
         observations = self.quantize_observation(observations)
         return {"observations": observations, "label": sample["label"]}
 
 
     def __call__(self, data_path: str = None):
-        # Load the data
+        """
+        Load data and preprocess samples from the specified data path.
+
+        Args:
+            data_path (str, optional): Path to the data file. Defaults to None.
+
+        Returns:
+            None
+        """
         data = np.load(data_path, allow_pickle=True)
 
         self.raw_train_samples = []
