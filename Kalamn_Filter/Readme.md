@@ -1,4 +1,15 @@
 # Kalman Filter for Ball Trajectory Estimation
+<div align="center">
+  <img src="Kalman-Filter-Ball-Trajectory-Estimation/trajectory_estimation_animation.gif" alt="Trajectory Estimation Animation" width="125%">
+</div>
+ *Figure 1: Comparison of ground truth trajectory, noisy measurements, and filtered estimates from two Kalman filter models. The second filter (kf2) closely follows the ground truth trajectory, demonstrating improved accuracy.*
+
+
+<div align="center">
+  <img src="Kalman-Filter-Ball-Trajectory-Estimation/kalman_gain_animation.gif" alt="Kalman Gain Visualization" width="125%">
+</div>
+
+*Figure 2: Visualization of Kalman gain values over time for each component (x, vx, y, vy). As the number of filtering steps increases, the Kalman gain values decrease, indicating increased confidence in estimates.*
 
 ## Abstract
 This report outlines the implementation of a Kalman filter for estimating the trajectory of a ball based on noisy measurements. The project aims to showcase the effectiveness of Kalman filtering in reducing noise and improving trajectory estimation accuracy.
@@ -111,19 +122,6 @@ filtered_state_means_2 = np.array(filtered_state_means_2)
 ```
 
 ## Results and Analysis
-<div align="center">
-  <img src="Kalman-Filter-Ball-Trajectory-Estimation/trajectory_estimation_animation.gif" alt="Trajectory Estimation Animation" width="75%">
-</div>
- *Figure 1: Comparison of ground truth trajectory, noisy measurements, and filtered estimates from two Kalman filter models. The second filter (kf2) closely follows the ground truth trajectory, demonstrating improved accuracy.*
-
-
-<div align="center">
-  <img src="Kalman-Filter-Ball-Trajectory-Estimation/kalman_gain_animation.gif" alt="Kalman Gain Visualization" width="75%">
-</div>
-
-*Figure 2: Visualization of Kalman gain values over time for each component (x, vx, y, vy). As the number of filtering steps increases, the Kalman gain values decrease, indicating increased confidence in estimates.*
-
-
 The figure above presents a comparison of the ground truth trajectory, noisy measurements, and the filtered estimates obtained from two Kalman filter models. The first filter (kf1) represents the basic Kalman filter, while the second filter (kf2) incorporates acceleration due to gravity in its prediction step. As observed, the trajectory estimated by the second filter (kf2) closely follows the ground truth trajectory and demonstrates more accurate estimation.
 
 Visualizing the Kalman gain values over time provides insights into how the filter adapts to changing measurement characteristics. The Kalman gain's responsiveness is a key factor in achieving robust trajectory estimation.
