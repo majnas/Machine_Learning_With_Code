@@ -28,6 +28,90 @@ def get_kf(x, dt, noise_std):
                      [0, 0, 1, 0]])
     return kf
 
+
+def animate_trajectory_estimation(x_obs: np.ndarray,
+                                  y_obs: np.ndarray,
+                                  filtered_state_means_1: np.ndarray, 
+                                  filtered_state_means_2: np.ndarray,
+                                  x: np.ndarray,
+                                  y: np.ndarray,
+                                  n_steps: int):
+    # Create a figure and axis for the animation
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.set_title('Kalman Filter for Ball Trajectory Estimation with Noisy Observations')
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.grid(True)
+
+    # Set initial y-axis limits based on the ground truth trajectory
+    ax.set_ylim(min(y) - 10, max(y) + 50)
+
+    # Plot Ground Truth
+    ax.plot(x, y, label='Ground Truth', color='black')
+
+    # Initialize empty lines for each plot
+    ground_truth_line, = ax.plot([], [], color='black')
+    noisy_measurements_line, = ax.plot([], [], marker='o', linestyle='None', color='red', label='Noisy Measurements')
+    filtered_est1_line, = ax.plot([], [], marker='o', color='green', label='Filtered Estimate 1')
+    filtered_est2_line, = ax.plot([], [], marker='o', color='blue', label='Filtered Estimate 2')
+
+    # Set up the animation function
+    def animate(i):
+        ground_truth_line.set_data(x[i], y[i])
+        noisy_measurements_line.set_data(x_obs[:i+1], y_obs[:i+1])
+        filtered_est1_line.set_data(filtered_state_means_1[:i+1, 0], filtered_state_means_1[:i+1, 2])
+        filtered_est2_line.set_data(filtered_state_means_2[:i+1, 0], filtered_state_means_2[:i+1, 2])
+        
+        ax.legend()
+
+    # Create the animation
+    ani = animation.FuncAnimation(fig, animate, frames=n_steps, interval=200)
+
+    # Save the animation as a GIF file
+    ani.save('trajectory_estimation_animation.gif', writer='pillow')
+
+    # Display the animation
+    plt.show()
+
+def animate_kalman_filter_gain(kalman_gain_history: np.ndarray, 
+                               t: np.ndarray,
+                               n_steps: int):
+    # Create a figure and axis for the animation
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.set_title('Kalman Gain Visualization')
+    ax.set_xlabel('Time')
+    ax.set_ylabel('Kalman Gain')
+    ax.grid(True)
+
+    # Set initial x-axis and y-axis limits
+    ax.set_xlim(0, t[-1])  # Adjust x-axis limits
+    ax.set_ylim(0, 0.5)    # Adjust y-axis limits
+
+    # Initialize empty lines for each Kalman gain component
+    kalman_gain_x_line, = ax.plot([], [], label='Kalman Gain (x)', marker='o', color='green', linestyle='None')
+    kalman_gain_vx_line, = ax.plot([], [], label='Kalman Gain (vx)', marker='o', color='red', linestyle='None')
+    kalman_gain_y_line, = ax.plot([], [], label='Kalman Gain (y)', color='black')
+    kalman_gain_vy_line, = ax.plot([], [], label='Kalman Gain (vy)')
+
+    # Set up the animation function
+    def animate(i):
+        kalman_gain_x_line.set_data(t[:i+1], kalman_gain_history[:i+1, 0, 0])
+        kalman_gain_vx_line.set_data(t[:i+1], kalman_gain_history[:i+1, 1, 0])
+        kalman_gain_y_line.set_data(t[:i+1], kalman_gain_history[:i+1, 2, 1])
+        kalman_gain_vy_line.set_data(t[:i+1], kalman_gain_history[:i+1, 3, 1])
+        
+        ax.legend()
+
+    # Create the animation
+    ani = animation.FuncAnimation(fig, animate, frames=n_steps, interval=200)
+
+    # Save the animation as a GIF file
+    ani.save('kalman_gain_animation.gif', writer='pillow')
+
+    # Display the animation
+    plt.show()
+
+
 def main():
     # Constants
     gx = 0
@@ -90,60 +174,14 @@ def main():
     filtered_state_means_1 = np.array(filtered_state_means_1)
     filtered_state_means_2 = np.array(filtered_state_means_2)
 
-
-    # Create a figure and axis for the animation
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.set_title('Kalman Filter for Ball Trajectory Estimation with Noisy Observations')
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
-    ax.grid(True)
-
-    # Set initial y-axis limits based on the ground truth trajectory
-    ax.set_ylim(min(y) - 10, max(y) + 50)
-
-    # Plot Ground Truth
-    ax.plot(x, y, label='Ground Truth', color='black')
-
-    # Initialize empty lines for each plot
-    ground_truth_line, = ax.plot([], [], color='black')
-    noisy_measurements_line, = ax.plot([], [], marker='o', linestyle='None', color='red', label='Noisy Measurements')
-    filtered_est1_line, = ax.plot([], [], marker='o', color='green', label='Filtered Estimate 1')
-    filtered_est2_line, = ax.plot([], [], marker='o', color='blue', label='Filtered Estimate 2')
-
-    # Set up the animation function
-    def animate(i):
-        ground_truth_line.set_data(x[i], y[i])
-        noisy_measurements_line.set_data(x_obs[:i+1], y_obs[:i+1])
-        filtered_est1_line.set_data(filtered_state_means_1[:i+1, 0], filtered_state_means_1[:i+1, 2])
-        filtered_est2_line.set_data(filtered_state_means_2[:i+1, 0], filtered_state_means_2[:i+1, 2])
-        
-        ax.legend()
-
-    # Create the animation
-    ani = animation.FuncAnimation(fig, animate, frames=n_steps, interval=200)
-
-    # Save the animation as a GIF file
-    ani.save('trajectory_estimation_animation.gif', writer='pillow')
-    # Display the animation
-    plt.show()
+    # animate trajectory estimation
+    animate_trajectory_estimation(x_obs, y_obs, filtered_state_means_1, filtered_state_means_2, x, y, n_steps)
 
     # Convert the Kalman gain history list into a NumPy array
     kalman_gain_history = np.array(kalman_gain_history)
 
-    # Plotting the Kalman gain values for each component (x and y)
-    plt.figure(figsize=(10, 6))
-    plt.plot(t, kalman_gain_history[:, 0, 0], label='Kalman Gain (x)', marker='o', color='green', linestyle='None')
-    plt.plot(t, kalman_gain_history[:, 1, 0], label='Kalman Gain (vx)', marker='o', color='red', linestyle='None')
-    plt.plot(t, kalman_gain_history[:, 2, 1], label='Kalman Gain (y)', color='black')
-    plt.plot(t, kalman_gain_history[:, 3, 1], label='Kalman Gain (vy)')
-
-    # Add labels and legend
-    plt.legend()
-    plt.title('Kalman Gain Visualization')
-    plt.xlabel('Time')
-    plt.ylabel('Kalman Gain')
-    plt.grid(True)
-    plt.show()
+    # animate kalman filter gain  
+    animate_kalman_filter_gain(kalman_gain_history, t, n_steps)
 
 if __name__ == "__main__":
     main()

@@ -118,7 +118,7 @@ filtered_state_means_2 = np.array(filtered_state_means_2)
 
 
 <div align="center">
-  <img src="Kalman-Filter-Ball-Trajectory-Estimation/Kalman_Gain.png" alt="Kalman Gain Visualization" width="75%">
+  <img src="Kalman-Filter-Ball-Trajectory-Estimation/kalman_gain_animation.gif" alt="Kalman Gain Visualization" width="75%">
 </div>
 
 *Figure 2: Visualization of Kalman gain values over time for each component (x, vx, y, vy). As the number of filtering steps increases, the Kalman gain values decrease, indicating increased confidence in estimates.*
