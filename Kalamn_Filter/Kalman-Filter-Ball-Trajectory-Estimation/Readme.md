@@ -1,12 +1,12 @@
 # Kalman Filter for Ball Trajectory Estimation
 <div align="center">
-  <img src="Kalman-Filter-Ball-Trajectory-Estimation/trajectory_estimation_animation.gif" alt="Trajectory Estimation Animation" width="125%">
+  <img src="trajectory_estimation_animation.gif" alt="Trajectory Estimation Animation" width="125%">
 </div>
  *Figure 1: Comparison of ground truth trajectory, noisy measurements, and filtered estimates from two Kalman filter models. The second filter (kf2) closely follows the ground truth trajectory, demonstrating improved accuracy.*
 
 
 <div align="center">
-  <img src="Kalman-Filter-Ball-Trajectory-Estimation/kalman_gain_animation.gif" alt="Kalman Gain Visualization" width="125%">
+  <img src="kalman_gain_animation.gif" alt="Kalman Gain Visualization" width="125%">
 </div>
 
 *Figure 2: Visualization of Kalman gain values over time for each component (x, vx, y, vy). As the number of filtering steps increases, the Kalman gain values decrease, indicating increased confidence in estimates.*
