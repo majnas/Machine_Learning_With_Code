@@ -53,7 +53,7 @@ def main():
 
     # Add random noise to x and y to simulate measurements
     np.random.seed(0)  # For reproducibility
-    noise_std = 1.0
+    noise_std = 5.0
     x_obs = x + np.random.normal(0, noise_std, n_steps)
     y_obs = y + np.random.normal(0, noise_std, n_steps)
 
@@ -67,9 +67,12 @@ def main():
                   [gy]]).reshape(2,1)
 
     B = np.array([[0.5*dt*dt, 0],
-                [dt,        0],
-                [0, 0.5*dt*dt],
-                [0,        dt]]).reshape(4,2)
+                  [dt,        0],
+                  [0, 0.5*dt*dt],
+                  [0,        dt]]).reshape(4,2)
+
+    # Create a list to store Kalman gain values
+    kalman_gain_history = []
     for obs in zip(x_obs, y_obs):
         kf1.predict()
         kf1.update(obs)
@@ -78,6 +81,9 @@ def main():
         kf2.predict(u=u, B=B)
         kf2.update(obs)
         filtered_state_means_2.append(kf2.x)
+
+        # Append the Kalman gain matrix to the history list
+        kalman_gain_history.append(kf2.K)
 
     filtered_state_means_1 = np.array(filtered_state_means_1)
     filtered_state_means_2 = np.array(filtered_state_means_2)
@@ -102,6 +108,24 @@ def main():
     plt.title('Kalman Filter for Ball Trajectory Estimation with Noisy Observations')
     plt.xlabel('X')
     plt.ylabel('Y')
+    plt.grid(True)
+    plt.show()
+
+    # Convert the Kalman gain history list into a NumPy array
+    kalman_gain_history = np.array(kalman_gain_history)
+
+    # Plotting the Kalman gain values for each component (x and y)
+    plt.figure(figsize=(10, 6))
+    plt.plot(t, kalman_gain_history[:, 0, 0], label='Kalman Gain (x)', marker='o', color='green', linestyle='None')
+    plt.plot(t, kalman_gain_history[:, 1, 0], label='Kalman Gain (vx)', marker='o', color='red', linestyle='None')
+    plt.plot(t, kalman_gain_history[:, 2, 1], label='Kalman Gain (y)', color='black')
+    plt.plot(t, kalman_gain_history[:, 3, 1], label='Kalman Gain (vy)')
+
+    # Add labels and legend
+    plt.legend()
+    plt.title('Kalman Gain Visualization')
+    plt.xlabel('Time')
+    plt.ylabel('Kalman Gain')
     plt.grid(True)
     plt.show()
 
