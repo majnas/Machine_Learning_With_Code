@@ -112,9 +112,8 @@ filtered_state_means_2 = np.array(filtered_state_means_2)
 
 ## Results and Analysis
 <div align="center">
-  <img src="Kalman-Filter-Ball-Trajectory-Estimation/Trajectory_Estimation.png" alt="Trajectory Estimation" width="75%">
+  <img src="Kalman-Filter-Ball-Trajectory-Estimation/trajectory_estimation_animation.gif" alt="Trajectory Estimation Animation" width="75%">
 </div>
-
  *Figure 1: Comparison of ground truth trajectory, noisy measurements, and filtered estimates from two Kalman filter models. The second filter (kf2) closely follows the ground truth trajectory, demonstrating improved accuracy.*
 
 

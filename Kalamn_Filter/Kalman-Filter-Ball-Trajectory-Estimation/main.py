@@ -2,6 +2,7 @@ import math
 import numpy as np
 from filterpy.kalman import KalmanFilter
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 
 
 # Define a function to initialize the Kalman Filter
@@ -89,27 +90,41 @@ def main():
     filtered_state_means_1 = np.array(filtered_state_means_1)
     filtered_state_means_2 = np.array(filtered_state_means_2)
 
-    # Plotting the results
-    plt.figure(figsize=(10, 6))
+
+    # Create a figure and axis for the animation
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.set_title('Kalman Filter for Ball Trajectory Estimation with Noisy Observations')
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.grid(True)
+
+    # Set initial y-axis limits based on the ground truth trajectory
+    ax.set_ylim(min(y) - 10, max(y) + 50)
 
     # Plot Ground Truth
-    plt.plot(x, y, label='Ground Truth', color='black')
+    ax.plot(x, y, label='Ground Truth', color='black')
 
-    # Plot Noisy Measurements
-    plt.plot(x_obs, y_obs, label='Noisy Measurements', marker='o', linestyle='None', color='red')
+    # Initialize empty lines for each plot
+    ground_truth_line, = ax.plot([], [], color='black')
+    noisy_measurements_line, = ax.plot([], [], marker='o', linestyle='None', color='red', label='Noisy Measurements')
+    filtered_est1_line, = ax.plot([], [], marker='o', color='green', label='Filtered Estimate 1')
+    filtered_est2_line, = ax.plot([], [], marker='o', color='blue', label='Filtered Estimate 2')
 
-    # Plot Filtered Estimate 1
-    plt.plot(filtered_state_means_1[:, 0], filtered_state_means_1[:, 2], label='Filtered Estimate 1', marker='o', color='green')
+    # Set up the animation function
+    def animate(i):
+        ground_truth_line.set_data(x[i], y[i])
+        noisy_measurements_line.set_data(x_obs[:i+1], y_obs[:i+1])
+        filtered_est1_line.set_data(filtered_state_means_1[:i+1, 0], filtered_state_means_1[:i+1, 2])
+        filtered_est2_line.set_data(filtered_state_means_2[:i+1, 0], filtered_state_means_2[:i+1, 2])
+        
+        ax.legend()
 
-    # Plot Filtered Estimate 2
-    plt.plot(filtered_state_means_2[:, 0], filtered_state_means_2[:, 2], label='Filtered Estimate 2', marker='o', color='blue')
+    # Create the animation
+    ani = animation.FuncAnimation(fig, animate, frames=n_steps, interval=200)
 
-    # Add labels and legend
-    plt.legend()
-    plt.title('Kalman Filter for Ball Trajectory Estimation with Noisy Observations')
-    plt.xlabel('X')
-    plt.ylabel('Y')
-    plt.grid(True)
+    # Save the animation as a GIF file
+    ani.save('trajectory_estimation_animation.gif', writer='pillow')
+    # Display the animation
     plt.show()
 
     # Convert the Kalman gain history list into a NumPy array
