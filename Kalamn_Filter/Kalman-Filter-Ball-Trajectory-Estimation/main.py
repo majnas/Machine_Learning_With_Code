@@ -63,6 +63,7 @@ def main():
     # Perform Kalman filtering
     filtered_state_means_1 = []
     filtered_state_means_2 = []
+    
     u = np.array([[gx], 
                   [gy]]).reshape(2,1)
 
