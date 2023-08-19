@@ -22,6 +22,9 @@ projectiles = []
 # Variables for tracking mouse button events
 mouse_down_time = 0
 mouse_up_time = 0
+mouse_down_pos = ()
+mouse_up_pos = ()
+mouse_displacement = 0
 
 # Main loop
 running = True
@@ -30,12 +33,15 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            print("down event.pos", event.pos)
-            
+            mouse_down_pos = event.pos
             mouse_down_time = pygame.time.get_ticks()
         elif event.type == pygame.MOUSEBUTTONUP:
-            print("up event.pos", event.pos)
+            mouse_up_pos = event.pos
             mouse_up_time = pygame.time.get_ticks()
+
+            mouse_displacement = math.sqrt((mouse_up_pos[0]-mouse_down_pos[0])**2 + (mouse_up_pos[1]-mouse_down_pos[1])**2)
+            print("mouse_displacement", mouse_displacement)
+
 
             # Calculate time held down in milliseconds
             time_held = mouse_up_time - mouse_down_time
