@@ -6,8 +6,8 @@ import numpy as np
 from filterpy.kalman import KalmanFilter
 
 # Initialize pygame and pymunk
-SCREEN_WIDTH=1200
-SCREEN_HEIGHT=800
+SCREEN_WIDTH = 1200
+SCREEN_HEIGHT = 800
 NOISE_STD = 20.0
 COLOR_LINE = (255, 255, 0)
 COLOR_GT = (0, 0, 0 )
@@ -65,6 +65,27 @@ def get_kf(x, dt, noise_std):
 
 
 
+x0 = 123
+y0 = 224
+v0 = 100  # Initial velocity
+vx0 = 120 * 5
+vy0 = 120 * 5
+gx = 0
+gy = -981
+
+# Time settings
+t_start = 0
+t_end = 5
+n_steps = 50
+dt = (t_end - t_start) / n_steps  # Time step
+t = np.linspace(t_start, t_end, n_steps)
+
+# Generate ground truth trajectory
+xx = x0 + vx0 * t + 0.5 * gx * t * t
+yy = y0 + vy0 * t + 0.5 * gy * t * t
+
+# for (x_, y_) in zip(x,y):
+#     print(x_, y_)
 
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -89,6 +110,7 @@ history:List[List[Step]] = []
 
 # Main loop
 running = True
+midx = 0
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -100,16 +122,23 @@ while running:
             if event.key == pygame.K_r:  # Check if the pressed key is "r"
                 projectiles.clear()  # Clear the projectiles list
                 history.clear()
+            elif event.key == pygame.K_q:  # Check if the pressed key is "q"
+                running = False  # Set running to False to exit the loop
         elif event.type == pygame.MOUSEBUTTONUP:
             mouse_held = False
             mouse_up_pos = event.pos
 
             # Calculate mouse displacement
             mouse_displacement_vector = ((mouse_down_pos[0]-mouse_up_pos[0]), (mouse_up_pos[1]-mouse_down_pos[1]))
+            mouse_displacement_vector = (120, 120)
             
             # Create a ball at the mouse `click position
             start_pos_x = mouse_down_pos[0]
             start_pos_y = SCREEN_HEIGHT - mouse_down_pos[1]
+
+            start_pos_x = x0
+            start_pos_y = y0
+
             ball_radius = 10
             ball_mass = 1
             ball_moment = pymunk.moment_for_circle(ball_mass, 0, ball_radius)
@@ -123,6 +152,7 @@ while running:
             # Apply velocity to the ball in the direction of the shooting segment
             ball_body.velocity = (mouse_displacement_vector[0] * velocity_factor, mouse_displacement_vector[1] * velocity_factor)
 
+
             #? Instantiate a Kalman-Filter to track the projectile
             x = [start_pos_x, ball_body.velocity[0], start_pos_y, ball_body.velocity[1]]
             kf = get_kf(x, dt, NOISE_STD)
@@ -131,6 +161,16 @@ while running:
 
 
     screen.fill((255, 255, 255))
+
+    # math
+    if midx < 20:
+        pos = (xx[midx], SCREEN_HEIGHT-yy[midx])
+        pygame.draw.circle(screen, COLOR_PRED, pos, 10)
+    else:
+        midx = 0
+    midx += 1
+    print(midx)
+
 
     if mouse_held:
         mouse_pos = pygame.mouse.get_pos()
@@ -177,3 +217,4 @@ while running:
     clock.tick(10)
 
 pygame.quit()
+print(len(history))
