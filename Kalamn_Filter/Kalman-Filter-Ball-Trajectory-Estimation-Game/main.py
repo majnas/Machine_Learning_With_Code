@@ -94,6 +94,7 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 space = pymunk.Space()
 space.gravity = (0, -981)
+GAME_FONT = pygame.freetype.Font("freesansbold.ttf", 24)
 
 # Create the ground
 ground = pymunk.Segment(space.static_body, (0, 100), (SCREEN_WIDTH, 100), 5)
@@ -155,9 +156,12 @@ while running:
         pygame.draw.line(screen, COLOR_LINE, mouse_down_pos, mouse_pos, 5)
 
     # space.step(DT)
+    GAME_FONT.render_to(screen, (40, 30), "GT", COLOR_GT)
+    GAME_FONT.render_to(screen, (40, 60), "Observations", COLOR_OBS)
+    GAME_FONT.render_to(screen, (40, 90), "Predections", COLOR_PRED)
 
     # Draw the ground and projectiles
-    pygame.draw.line(screen, (0, 0, 0), (0, SCREEN_HEIGHT-100), (SCREEN_WIDTH, SCREEN_HEIGHT-100), 5)
+    # pygame.draw.line(screen, (0, 0, 0), (0, SCREEN_HEIGHT-100), (SCREEN_WIDTH, SCREEN_HEIGHT-100), 5)
     for projectile in projectiles:
         for i in range(N_STEPS-1):
             gt_pos_i = (int(projectile.x[i]), int(SCREEN_HEIGHT - projectile.y[i]))
@@ -174,9 +178,11 @@ while running:
             pred_pos_i = (int(projectile.x_pred[i]), int(SCREEN_HEIGHT - projectile.y_pred[i]))
             pred_pos_j = (int(projectile.x_pred[i+1]), int(SCREEN_HEIGHT - projectile.y_pred[i+1]))
             pygame.draw.circle(screen, COLOR_PRED, pred_pos_i, BALL_RADIUS)
-            pygame.draw.line(screen, COLOR_GT, pred_pos_i, pred_pos_j, 2)
+            # pygame.draw.line(screen, COLOR_GT, pred_pos_i, pred_pos_j, 2)
 
+
+    
     pygame.display.flip()
-    clock.tick(50)
+    # clock.tick(50)
 
 pygame.quit()
