@@ -1,5 +1,5 @@
  - [x] [Kalman Filter for Ball Trajectory Estimation](https://github.com/majnas/Machine_Learning_With_Code/tree/master/Kalamn_Filter/Kalman-Filter-Ball-Trajectory-Estimation)
- - [X] Kalman Filter for Ball Trajectory Estimation Game (Under Development)
+ - [X] [Kalman Filter for Ball Trajectory Estimation Game](https://github.com/majnas/Machine_Learning_With_Code/tree/master/Kalamn_Filter/Kalman-Filter-Ball-Trajectory-Estimation-Game)
 
 
 <div align="center">
