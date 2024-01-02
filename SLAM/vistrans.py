@@ -45,7 +45,29 @@ def draw_joints(ax, points, clr):
         ax.plot([x1, x2], [y1, y2], [z1, z2], color=clr)
 
 
-def update_plot(scale, theta_x, theta_y, theta_z, translation_x, translation_y, translation_z):
+def update_plot(val):
+    # print("val", val)
+    # print("sliders", sliders)
+
+    try:
+        scale = sliders['scale'].get()
+        theta_x = sliders['theta_x'].get()
+        theta_y = sliders['theta_y'].get()
+        theta_z = sliders['theta_z'].get()
+        translation_x = sliders['translation_x'].get()
+        translation_y = sliders['translation_y'].get()
+        translation_z = sliders['translation_z'].get()
+    except:
+        return
+
+    print("scale", scale)
+    print("theta_x", theta_x)
+    print("theta_y", theta_y)
+    print("theta_z", theta_z)
+    print("translation_x", translation_x)
+    print("translation_y", translation_y)
+    print("translation_z", translation_z)
+
     rotation = Rz(theta_z) * Ry(theta_y) * Rx(theta_x)
     rotation = scale * rotation
     translation = np.array([translation_x, translation_y, translation_z]).reshape(3, 1)
@@ -92,19 +114,13 @@ def update_plot(scale, theta_x, theta_y, theta_z, translation_x, translation_y, 
 
 
 # Sample 3D points
-points = []
-points.append([0, 0, 0, 1])
-points.append([1, 0, 0, 1])
-points.append([1, 2, 0, 1])
-points.append([0, 2, 0, 1])
-points.append([0, 0, 3, 1])
-points.append([1, 0, 3, 1])
-points.append([1, 2, 3, 1])
-points.append([0, 2, 3, 1])
-points = np.array(points)
+points = np.array([
+    [0, 0, 0, 1], [1, 0, 0, 1], [1, 2, 0, 1], [0, 2, 0, 1],
+    [0, 0, 3, 1], [1, 0, 3, 1], [1, 2, 3, 1], [0, 2, 3, 1]
+])
 
 # Set initial parameters
-initial_params = {'scale': 1, 'theta_x': 45, 'theta_y': 45, 'theta_z': 45,
+initial_params = {'scale': 10, 'theta_x': 0, 'theta_y': 0, 'theta_z': 0,
                   'translation_x': 0, 'translation_y': 0, 'translation_z': 0}
 
 # Create main window
@@ -115,35 +131,27 @@ root.title("3D Transformation Visualization")
 frame = ttk.Frame(root, padding="10")
 frame.grid(column=0, row=0, sticky=(tk.W, tk.E, tk.N, tk.S))
 
-# Create sliders
-sliders = {}
-for i, param in enumerate(initial_params.keys()):
-    ttk.Label(frame, text=param).grid(column=0, row=i, padx=5, pady=5, sticky=tk.W)
-    sliders[param] = ttk.Scale(frame, from_=0, to=360, orient=tk.HORIZONTAL, length=200)
-    sliders[param].set(initial_params[param])
-    sliders[param].grid(column=1, row=i, padx=5, pady=5)
-
-# Create button to update plot
-update_button = ttk.Button(root, text="Update Plot", command=lambda: update_plot(
-    sliders['scale'].get(),
-    sliders['theta_x'].get(),
-    sliders['theta_y'].get(),
-    sliders['theta_z'].get(),
-    sliders['translation_x'].get(),
-    sliders['translation_y'].get(),
-    sliders['translation_z'].get()
-))
-
-update_button.grid(column=0, row=1, pady=10)
 
 # Create Matplotlib figure and canvas
-fig = plt.figure()
+fig = plt.figure(figsize=(10, 8))
 ax = fig.add_subplot(111, projection='3d')
 canvas = FigureCanvasTkAgg(fig, master=root)
 canvas.get_tk_widget().grid(column=1, row=0, rowspan=2, padx=10, pady=10)
 
+
+# Create sliders
+sliders = {}
+for i, param in enumerate(initial_params.keys()):
+    to_ = 360 if 'theta' in param else 100
+    print("param---------------------", param, to_)
+    ttk.Label(frame, text=param).grid(column=0, row=i, padx=5, pady=5, sticky=tk.W)
+    sliders[param] = ttk.Scale(frame, from_=0, to=to_, orient=tk.HORIZONTAL, length=200, command=update_plot)
+    sliders[param].set(initial_params[param])
+    sliders[param].grid(column=1, row=i, padx=5, pady=5)
+
+
 # Initial plot
-update_plot(**initial_params)
+update_plot(0)
 
 # Run the Tkinter event loop
 root.mainloop()
