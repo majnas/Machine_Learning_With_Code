@@ -80,6 +80,10 @@ def update_matrix_display():
     # Update the matrix display
     matrix_var.set(display_text)
 
+    # Update the slider value labels
+    for param, slider in sliders.items():
+        label_var[param].set(f"{slider.get():>2.3f}")
+
 
 def update_plot(val):
     # print("val", val)
@@ -96,14 +100,6 @@ def update_plot(val):
         translation_z = sliders['translation_z'].get()
     except:
         return
-
-    print("scale", scale)
-    print("theta_x", theta_x)
-    print("theta_y", theta_y)
-    print("theta_z", theta_z)
-    print("translation_x", translation_x)
-    print("translation_y", translation_y)
-    print("translation_z", translation_z)
 
     rotation = Rz(theta_z) * Ry(theta_y) * Rx(theta_x)
     rotation = scale * rotation
@@ -186,15 +182,21 @@ matrix_var = StringVar()
 matrix_text = ttk.Label(frame, textvariable=matrix_var)
 matrix_text.grid(column=0, row=len(initial_params) + 2, columnspan=2, pady=5)
 
+# Create StringVar for slider value labels
+label_var = {param: StringVar() for param in initial_params.keys()}
+
 # Create sliders
 sliders = {}
 for i, param in enumerate(initial_params.keys()):
-    to_ = 360 if 'theta' in param else 100
-    to_ = 20 if 'scale' in param else to_
+    to_ = 360 if 'theta' in param else 30
+    # to_ = 20 if 'scale' in param else to_
     ttk.Label(frame, text=param).grid(column=0, row=i, padx=5, pady=5, sticky=tk.W)
     sliders[param] = ttk.Scale(frame, from_=0, to=to_, orient=tk.HORIZONTAL, length=200, command=update_plot)
     sliders[param].set(initial_params[param])
     sliders[param].grid(column=1, row=i, padx=5, pady=5)
+
+    # Create labels for slider values
+    ttk.Label(frame, textvariable=label_var[param]).grid(column=2, row=i, padx=5, pady=5, sticky=tk.W)
 
 # Initial plot
 update_plot(0)
