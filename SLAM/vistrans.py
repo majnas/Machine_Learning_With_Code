@@ -139,9 +139,9 @@ def update_plot(val):
     ax.set_zlabel('Z Label')
 
     # Set axis limits
-    ax.set_xlim([0, 10])
-    ax.set_ylim([0, 10])
-    ax.set_zlim([0, 10])
+    ax.set_xlim([0, 30])
+    ax.set_ylim([0, 30])
+    ax.set_zlim([0, 30])
 
     # Set specific view angle (elevation, azimuth)
     ax.view_init(elev=20, azim=45)
@@ -157,7 +157,7 @@ points = np.array([
 ])
 
 # Set initial parameters
-initial_params = {'scale': 10, 'theta_x': 0, 'theta_y': 0, 'theta_z': 0,
+initial_params = {'scale': 2, 'theta_x': 0, 'theta_y': 0, 'theta_z': 0,
                   'translation_x': 0, 'translation_y': 0, 'translation_z': 0}
 
 # Create main window
@@ -190,6 +190,7 @@ matrix_text.grid(column=0, row=len(initial_params) + 2, columnspan=2, pady=5)
 sliders = {}
 for i, param in enumerate(initial_params.keys()):
     to_ = 360 if 'theta' in param else 100
+    to_ = 20 if 'scale' in param else to_
     ttk.Label(frame, text=param).grid(column=0, row=i, padx=5, pady=5, sticky=tk.W)
     sliders[param] = ttk.Scale(frame, from_=0, to=to_, orient=tk.HORIZONTAL, length=200, command=update_plot)
     sliders[param].set(initial_params[param])
