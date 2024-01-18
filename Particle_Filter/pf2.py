@@ -1,12 +1,8 @@
 import numpy as np
 import scipy
-
 from filterpy.monte_carlo import systematic_resample
-# from numpy.linalg import norm
-# from numpy.random import randn
 import scipy.stats
 import matplotlib.pyplot as plt
-# from numpy.random import seed
 
 def create_uniform_particles(x_range, y_range, hdg_range, N):
     particles = np.empty((N, 3))
@@ -92,8 +88,7 @@ def run_pf1(N, iters=18, sensor_std_err=.1,
    
     # create particles and weights
     if initial_x is not None:
-        particles = create_gaussian_particles(
-            mean=initial_x, std=(5, 5, np.pi/4), N=N)
+        particles = create_gaussian_particles(mean=initial_x, std=(5, 5, np.pi/4), N=N)
     else:
         particles = create_uniform_particles((0,20), (0,20), (0, 6.28), N)
     weights = np.ones(N) / N
@@ -101,9 +96,8 @@ def run_pf1(N, iters=18, sensor_std_err=.1,
     if plot_particles:
         alpha = .20
         if N > 5000:
-            alpha *= np.sqrt(5000)/np.sqrt(N)           
-        plt.scatter(particles[:, 0], particles[:, 1], 
-                    alpha=alpha, color='g')
+            alpha *= np.sqrt(5000)/np.sqrt(N)
+        plt.scatter(particles[:, 0], particles[:, 1], alpha=alpha, color='g')
     
     xs = []
     robot_pos = np.array([0., 0.])
@@ -111,15 +105,13 @@ def run_pf1(N, iters=18, sensor_std_err=.1,
         robot_pos += (1, 1)
 
         # distance from robot to each landmark
-        zs = (np.linalg.norm(landmarks - robot_pos, axis=1) + 
-              (np.random.randn(NL) * sensor_std_err))
+        zs = (np.linalg.norm(landmarks - robot_pos, axis=1) + (np.random.randn(NL) * sensor_std_err))
 
         # move diagonally forward to (x+1, x+1)
         predict(particles, u=(0.00, 1.414), std=(.2, .05))
         
         # incorporate measurements
-        update(particles, weights, z=zs, R=sensor_std_err, 
-               landmarks=landmarks)
+        update(particles, weights, z=zs, R=sensor_std_err, landmarks=landmarks)
         
         # resample if too few effective particles
         if neff(weights) < N/2:
@@ -130,10 +122,8 @@ def run_pf1(N, iters=18, sensor_std_err=.1,
         xs.append(mu)
 
         if plot_particles:
-            plt.scatter(particles[:, 0], particles[:, 1], 
-                        color='k', marker=',', s=1)
-        p1 = plt.scatter(robot_pos[0], robot_pos[1], marker='+',
-                         color='k', s=180, lw=3)
+            plt.scatter(particles[:, 0], particles[:, 1], color='k', marker=',', s=1)
+        p1 = plt.scatter(robot_pos[0], robot_pos[1], marker='+', color='k', s=180, lw=3)
         p2 = plt.scatter(mu[0], mu[1], marker='s', color='r')
     
     xs = np.array(xs)
