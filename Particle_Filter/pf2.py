@@ -12,16 +12,6 @@ def create_uniform_particles(x_range, y_range, hdg_range, N):
     particles[:, 2] %= 2 * np.pi
     return particles
 
-
-def create_gaussian_particles(mean, std, N):
-    particles = np.empty((N, 3))
-    particles[:, 0] = mean[0] + (np.random.randn(N) * std[0])
-    particles[:, 1] = mean[1] + (np.random.randn(N) * std[1])
-    particles[:, 2] = mean[2] + (np.random.randn(N) * std[2])
-    particles[:, 2] %= 2 * np.pi
-    return particles
-
-
 def predict(particles, u, std, dt=1.):
     """ move according to control input u (heading change, velocity)
     with noise Q (std heading change, std velocity)`"""
@@ -77,20 +67,14 @@ def resample_from_index(particles, weights, indexes):
 
 
 
-def run_pf1(N, iters=18, sensor_std_err=.1, 
-            do_plot=True, plot_particles=False,
-            xlim=(0, 20), ylim=(0, 20),
-            initial_x=None):
+def run_pf1(N, iters=18, sensor_std_err=.1, plot_particles=False, xlim=(0, 20), ylim=(0, 20)):
     landmarks = np.array([[-1, 2], [5, 10], [12,14], [18,21]])
     NL = len(landmarks)
     
     plt.figure()
    
     # create particles and weights
-    if initial_x is not None:
-        particles = create_gaussian_particles(mean=initial_x, std=(5, 5, np.pi/4), N=N)
-    else:
-        particles = create_uniform_particles((0,20), (0,20), (0, 6.28), N)
+    particles = create_uniform_particles((0,20), (0,20), (0, 6.28), N)
     weights = np.ones(N) / N
 
     if plot_particles:
@@ -99,6 +83,9 @@ def run_pf1(N, iters=18, sensor_std_err=.1,
             alpha *= np.sqrt(5000)/np.sqrt(N)
         plt.scatter(particles[:, 0], particles[:, 1], alpha=alpha, color='g')
     
+    # Plot landmarks
+    plt.scatter(landmarks[:, 0], landmarks[:, 1], marker='o', color='b', s=100, label='Landmarks')
+
     xs = []
     robot_pos = np.array([0., 0.])
     for x in range(iters):
@@ -137,7 +124,7 @@ def run_pf1(N, iters=18, sensor_std_err=.1,
 
 if __name__ == "__main__":
     np.random.seed(2) 
-    run_pf1(N=500, iters=8, plot_particles=True,  xlim=(0,8), ylim=(0,8))
+    run_pf1(N=5000, iters=8, plot_particles=True)
 
 
 
