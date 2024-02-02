@@ -2,6 +2,11 @@
 
 This repository contains a Python script using the Pygame library to implement a simple particle filter for tracking the mouse cursor.
 
+<div align="center">
+  <img src="particle_filter_mouse_tracking.gif" alt="Particle Filter Mouse Tracking" width="125%">
+</div>
+
+
 ## Repository Structure
 
 - The `Particle_Filter` folder contains the main Python script:
