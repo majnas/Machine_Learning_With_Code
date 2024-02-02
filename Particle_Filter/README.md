@@ -5,7 +5,7 @@ This repository contains a Python script using the Pygame library to implement a
 ## Repository Structure
 
 - The `Particle_Filter` folder contains the main Python script:
-  - [`Particle_Filter/particle_filter_mouse_tracking.py`](Particle_Filter/particle_filter_mouse_tracking.py)
+  - [`particle_filter_mouse_tracking.py`](Particle_Filter/particle_filter_mouse_tracking.py)
 
 ## Features
 
