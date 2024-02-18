@@ -1,6 +1,16 @@
 import pygame
 import random
 import numpy as np
+from dataclasses import dataclass
+
+@dataclass
+class Dictance:
+    up: int
+    down: int
+    left: int
+    right: int
+    def __str__(self) -> str:
+        return f"Up: {self.up}, Left: {self.left}, Down: {self.down}, Right: {self.right}"
 
 class Board():
     def __init__(self, width: int, height: int, cell_size: int):
@@ -13,7 +23,6 @@ class Board():
         self.set_board_edges()
 
     def generate_board(self):
-        # board = [[0 for _ in range(self.n_cols)] for _ in range(self.n_rows)]
         self.board = np.zeros((self.n_rows, self.n_cols))
         for row in range(self.n_rows):
             for col in range(self.n_cols):
@@ -30,36 +39,45 @@ class Board():
                 color = (0, 0, 0) if self.board[row, col] == 1 else (255, 255, 255)
                 pygame.draw.rect(screen, color, (col * self.cell_size, row * self.cell_size, self.cell_size, self.cell_size))
 
-    def calculate_distance_to_wall(self, x, y):
+    def calculate_distance_to_wall(self, x, y)-> Dictance:
         # Calculate distance to the nearest wall in each direction
-        xcn = x // self.cell_size
-        ycn = y // self.cell_size
-        print("x, y", x, y, xcn, ycn)
-        return 0, 0, 0, 0
+        xrem = x % self.cell_size
+        yrem = y % self.cell_size
 
-    # def calculate_distance_to_wall(self, x, y):
-    #     # Calculate distance to the nearest wall in each direction
-    #     up_distance = left_distance = down_distance = right_distance = None
+        up = 0
+        col = x // self.cell_size
+        row = y // self.cell_size
+        while 0 <= row < self.n_rows and 0 <= col < self.n_cols and self.board[row][col] == 0:
+            row -= 1 
+            up += self.cell_size
 
-    #     # Check for walls in each direction
-    #     for row_offset, col_offset in [(0, -1), (-1, 0), (0, 1), (1, 0)]:
-    #         row = y // self.cell_size
-    #         col = x // self.cell_size
-    #         distance = 0
-    #         while 0 <= row < self.n_rows and 0 <= col < self.n_cols and self.board[row][col] == 0:
-    #             distance += self.cell_size
-    #             row += row_offset
-    #             col += col_offset
-    #         if row_offset == 0 and col_offset == -1:
-    #             left_distance = distance
-    #         elif row_offset == -1 and col_offset == 0:
-    #             up_distance = distance
-    #         elif row_offset == 0 and col_offset == 1:
-    #             right_distance = distance
-    #         elif row_offset == 1 and col_offset == 0:
-    #             down_distance = distance
+        left = 0
+        col = x // self.cell_size
+        row = y // self.cell_size
+        while 0 <= row < self.n_rows and 0 <= col < self.n_cols and self.board[row][col] == 0:
+            col -= 1 
+            left += self.cell_size
 
-    #     return up_distance, left_distance, down_distance, right_distance
+        down = 0
+        col = x // self.cell_size
+        row = y // self.cell_size
+        while 0 <= row < self.n_rows and 0 <= col < self.n_cols and self.board[row][col] == 0:
+            row += 1 
+            down += self.cell_size
+
+        right = 0
+        col = x // self.cell_size
+        row = y // self.cell_size
+        while 0 <= row < self.n_rows and 0 <= col < self.n_cols and self.board[row][col] == 0:
+            col += 1 
+            right += self.cell_size
+
+        up = up - self.cell_size + yrem
+        left = left - self.cell_size + xrem
+        down = down - yrem
+        right = right - xrem
+
+        return Dictance(up=up, down=down, left=left, right=right)
 
 
 def main():
@@ -87,8 +105,8 @@ def main():
 
         # Example usage of calculate_distance_to_wall method
         x, y = pygame.mouse.get_pos()
-        up_dist, left_dist, down_dist, right_dist = board.calculate_distance_to_wall(x, y)
-        print(f"Up: {up_dist}, Left: {left_dist}, Down: {down_dist}, Right: {right_dist}")
+        distance: Dictance = board.calculate_distance_to_wall(x, y)
+        print(distance)
 
         pygame.display.flip()
         clock.tick(30)
