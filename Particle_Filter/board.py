@@ -4,13 +4,35 @@ import numpy as np
 from dataclasses import dataclass
 
 @dataclass
-class Dictance:
+class Sensors:
     up: int
     down: int
     left: int
-    right: int
+    right: int 
+
+    def apply_limit(self, sensor_limit):
+        if sensor_limit is not None:
+            if self.up > sensor_limit:
+                self.up = sensor_limit
+            if self.down > sensor_limit:
+                self.down = sensor_limit
+            if self.left > sensor_limit:
+                self.left = sensor_limit
+            if self.right > sensor_limit:
+                self.right = sensor_limit
+
+    @staticmethod
+    def euclidean_distance(x1, x2):
+        return np.linalg.norm(np.asarray(x1) - np.asarray(x2))
+
+    def gaussian_distance(self, s2: 'Sensors', std=500):
+        distance = Sensors.euclidean_distance((self.up, self.down, self.left, self.right), 
+                                              (s2.up, s2.down, s2.left, s2.right))
+        return np.exp(-distance ** 2 / (2 * std)) 
+
     def __str__(self) -> str:
         return f"Up: {self.up}, Left: {self.left}, Down: {self.down}, Right: {self.right}"
+
 
 class Board():
     def __init__(self, width: int, height: int, cell_size: int):
@@ -39,36 +61,39 @@ class Board():
                 color = (0, 0, 0) if self.board[row, col] == 1 else (255, 255, 255)
                 pygame.draw.rect(screen, color, (col * self.cell_size, row * self.cell_size, self.cell_size, self.cell_size))
 
-    def calculate_distance_to_wall(self, x, y)-> Dictance:
-        # Calculate distance to the nearest wall in each direction
+    def read_sensors(self, x, y)-> Sensors:
+        # Calculate sensors to the nearest wall in each direction
+        x = int(x)
+        y = int(y)
+
         xrem = x % self.cell_size
         yrem = y % self.cell_size
 
         up = 0
         col = x // self.cell_size
         row = y // self.cell_size
-        while 0 <= row < self.n_rows and 0 <= col < self.n_cols and self.board[row][col] == 0:
+        while 0 <= row < self.n_rows and 0 <= col < self.n_cols and self.board[row, col] == 0:
             row -= 1 
             up += self.cell_size
 
         left = 0
         col = x // self.cell_size
         row = y // self.cell_size
-        while 0 <= row < self.n_rows and 0 <= col < self.n_cols and self.board[row][col] == 0:
+        while 0 <= row < self.n_rows and 0 <= col < self.n_cols and self.board[row, col] == 0:
             col -= 1 
             left += self.cell_size
 
         down = 0
         col = x // self.cell_size
         row = y // self.cell_size
-        while 0 <= row < self.n_rows and 0 <= col < self.n_cols and self.board[row][col] == 0:
+        while 0 <= row < self.n_rows and 0 <= col < self.n_cols and self.board[row, col] == 0:
             row += 1 
             down += self.cell_size
 
         right = 0
         col = x // self.cell_size
         row = y // self.cell_size
-        while 0 <= row < self.n_rows and 0 <= col < self.n_cols and self.board[row][col] == 0:
+        while 0 <= row < self.n_rows and 0 <= col < self.n_cols and self.board[row, col] == 0:
             col += 1 
             right += self.cell_size
 
@@ -77,7 +102,7 @@ class Board():
         down = down - yrem
         right = right - xrem
 
-        return Dictance(up=up, down=down, left=left, right=right)
+        return Sensors(up=up, down=down, left=left, right=right)
 
 
 def main():
@@ -105,8 +130,8 @@ def main():
 
         # Example usage of calculate_distance_to_wall method
         x, y = pygame.mouse.get_pos()
-        distance: Dictance = board.calculate_distance_to_wall(x, y)
-        print(distance)
+        sensor: Sensors = board.read_sensors(x, y)
+        print(sensor)
 
         pygame.display.flip()
         clock.tick(30)
