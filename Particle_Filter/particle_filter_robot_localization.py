@@ -6,6 +6,7 @@ import time
 import numpy as np
 from typing import List
 from icecream import ic
+import argparse
 
 from board import Board, Sensors
 from particle import Particle, Robot, Resampling
@@ -19,14 +20,7 @@ WHITE = (255, 255, 255)
 
 
 # Main function
-def main():
-    board_width = 800
-    board_height = 600
-    cell_size = 20
-    num_particles = 500
-    robot_speed = 10
-    sensor_limit = 500
-
+def main(board_width, board_height, cell_size, num_particles, robot_speed, sensor_limit):
     pygame.init()
     screen = pygame.display.set_mode((board_width, board_height))
     pygame.display.set_caption("Particle Filter Turtle Localization")
@@ -114,5 +108,15 @@ def main():
     pygame.quit()
 
 
+
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--board_width", type=int, default=800, help="Width of the board")
+    parser.add_argument("--board_height", type=int, default=600, help="Height of the board")
+    parser.add_argument("--cell_size", type=int, default=20, help="Size of each cell on the board")
+    parser.add_argument("--num_particles", type=int, default=500, help="Number of particles")
+    parser.add_argument("--robot_speed", type=int, default=10, help="Speed of the robot")
+    parser.add_argument("--sensor_limit", type=int, default=500, help="Sensor limit for the robot")
+    args = parser.parse_args()
+
+    main(args.board_width, args.board_height, args.cell_size, args.num_particles, args.robot_speed, args.sensor_limit)
