@@ -58,6 +58,9 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_q:
+                    running = False  # Exit the loop if Q key is pressed
 
         # Read robot sensor
         robot_sensors = robot.read_sensor()
@@ -68,7 +71,7 @@ def main():
 
         # Show particles
         for particle in particles:
-            particle.show(screen=screen, color=BLUE)
+            particle.show(screen=screen, color=BLUE)        
 
         # Show robot
         robot.show(screen=screen, color=RED, radius=10)
@@ -77,7 +80,6 @@ def main():
         particle_weight_total = sum([p.weight for p in particles])
 
         for particle in particles:
-            print(particle.weight, particle_weight_total)
             particle.weight /= (particle_weight_total + 1e-8)
 
         # Resampling particles
@@ -98,7 +100,7 @@ def main():
         # print(particle.is_valid)
 
         pygame.display.flip()
-        clock.tick(30)
+        clock.tick(1)
 
     pygame.quit()
 

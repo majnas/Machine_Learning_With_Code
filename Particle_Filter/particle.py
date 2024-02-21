@@ -4,6 +4,7 @@ import sys
 import math
 import numpy as np
 from board import Sensors
+from icecream import ic
 
 class Particle(object):
     def __init__(self, x, y, board, heading = None, weight = 1.0, sensor_limit = None, noisy = False):
@@ -53,6 +54,22 @@ class Particle(object):
 
     # def add_noise(self, x, std):
     #     return x + np.random.normal(0, std)
+
+    @staticmethod
+    def generate_blue_colors():
+        # Define the starting and ending RGB values for light blue and dark blue
+        light_blue = (204, 229, 255)  # RGB for light blue
+        dark_blue = (0, 51, 102)       # RGB for dark blue
+        # Linearly interpolate between the light blue and dark blue colors
+        blue_colors = []
+        for i in range(100):
+            # Interpolate the RGB values for blue component
+            r = int(light_blue[0] + (dark_blue[0] - light_blue[0]) * (i / 99))
+            g = int(light_blue[1] + (dark_blue[1] - light_blue[1]) * (i / 99))
+            b = int(light_blue[2] + (dark_blue[2] - light_blue[2]) * (i / 99))
+            # Append the interpolated color to the list
+            blue_colors.append((r, g, b))
+        return blue_colors
 
     def read_sensor(self):
         sensors: Sensors = self.board.read_sensors(self.x, self.y)
@@ -143,8 +160,15 @@ class Particle(object):
 
     #     else:
     #         raise Exception('Unexpected collision detection.')
-    def show(self, screen, color, radius: int = 5):        
+
+    def show(self, screen, color, radius: int = 5):
+        # Generate 100 blue colors from light blue to dark blue
+        blue_color_range = self.generate_blue_colors()
+        color_idx = int(self.weight * 99)
+        color = blue_color_range[color_idx]
+        ic(color_idx, color)
         pygame.draw.circle(screen, color, (self.x, self.y), radius)
+
 
         # Calculate endpoint of the line
         heading_rad = np.radians(self.heading)
@@ -155,6 +179,7 @@ class Particle(object):
 
         # Draw the line from center to endpoint
         pygame.draw.line(screen, (255, 255, 255), (self.x, self.y), (endpoint_x, endpoint_y), 2)
+
 
 
 class Robot(Particle):
