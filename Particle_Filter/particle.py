@@ -5,13 +5,6 @@ import math
 import numpy as np
 from board import Sensors
 
-# Define colors
-YELLOW = (255, 255, 0)
-BLUE = (0, 0, 255)
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-
-
 class Particle(object):
     def __init__(self, x, y, board, heading = None, weight = 1.0, sensor_limit = None, noisy = False):
         if heading is None:
@@ -24,11 +17,14 @@ class Particle(object):
         self.board = board
         self.sensor_limit = sensor_limit
 
-        # if noisy:
-        #     std = max(self.board.grid_height, self.board.grid_width) * 0.2
-        #     self.x = self.add_noise(x = self.x, std = std)
-        #     self.y = self.add_noise(x = self.y, std = std)
-        #     self.heading = self.add_noise(x = self.heading, std = 360 * 0.05)
+        if noisy:
+            std = max(self.board.grid_height, self.board.grid_width) * 0.2
+            # self.x = self.add_noise(x = self.x, std = std)
+            # self.y = self.add_noise(x = self.y, std = std)
+            # self.heading = self.add_noise(x = self.heading, std = 360 * 0.05)
+            self.x = self.x + np.random.normal(0, std)
+            self.y = self.y + np.random.normal(0, std)
+            self.heading = self.heading + np.random.normal(0, 360 * 0.05)
 
         # self.is_valid = self.fix_invalid_particles()
 
@@ -146,9 +142,8 @@ class Particle(object):
 
     #     else:
     #         raise Exception('Unexpected collision detection.')
-    def show(self, screen):
-        radius = 5
-        pygame.draw.circle(screen, BLUE, (self.x, self.y), radius)
+    def show(self, screen, color, radius: int = 5):        
+        pygame.draw.circle(screen, color, (self.x, self.y), radius)
 
         # Calculate endpoint of the line
         heading_rad = np.radians(self.heading)
@@ -158,7 +153,7 @@ class Particle(object):
         endpoint_y = self.y + dy
 
         # Draw the line from center to endpoint
-        pygame.draw.line(screen, WHITE, (self.x, self.y), (endpoint_x, endpoint_y), 2)
+        pygame.draw.line(screen, (255, 255, 255), (self.x, self.y), (endpoint_x, endpoint_y), 2)
 
 
 class Robot(Particle):
@@ -200,3 +195,29 @@ class Robot(Particle):
     #             break
     #         self.choose_random_direction()
 
+
+
+class Resampling():
+    def __init__(self, particles) -> None:
+        self.particles = particles
+
+        weights = [particle.weight for particle in particles]
+        total_weight = sum(weights)
+        self.probabilities = [weight / total_weight for weight in weights]
+
+    def get_particles(self):
+        new_particles = []
+        for _ in range(len(self.particles)):
+            # Select a particle index using roulette wheel selection
+            index = np.random.choice(len(self.particles), p=self.probabilities)
+            # Create a new particle as a copy of the selected one
+            new_particle = Particle(x=self.particles[index].x,
+                                    y=self.particles[index].y,
+                                    board=self.particles[index].board,
+                                    heading=self.particles[index].heading,
+                                    weight=self.particles[index].weight,
+                                    sensor_limit=self.particles[index].sensor_limit,
+                                    noisy=True)
+            new_particles.append(new_particle)
+
+        return new_particles

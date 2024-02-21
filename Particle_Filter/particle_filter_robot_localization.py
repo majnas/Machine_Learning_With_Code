@@ -7,9 +7,12 @@ import numpy as np
 from typing import List
 
 from board import Board, Sensors
-from particle import Particle, Robot
+from particle import Particle, Robot, Resampling
 
-# Constants
+# Define colors
+YELLOW = (255, 255, 0)
+BLUE = (0, 0, 255)
+RED = (255, 0, 0)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
@@ -65,25 +68,24 @@ def main():
 
         # Show particles
         for particle in particles:
-            particle.show(screen)
+            particle.show(screen=screen, color=BLUE)
 
         # Show robot
+        robot.show(screen=screen, color=RED, radius=10)
                 
         # Normalize particle weights
-        particle_weight_total = [p.weight for p in particles]
-
-        # Make sure normalization is not divided by zero
-        if particle_weight_total == 0:
-            particle_weight_total = 1e-8
+        particle_weight_total = sum([p.weight for p in particles])
 
         for particle in particles:
-            # print(particle.weight)
-            particle.weight /= particle_weight_total
+            print(particle.weight, particle_weight_total)
+            particle.weight /= (particle_weight_total + 1e-8)
 
         # Resampling particles
+        resampling = Resampling(particles)
+        particles = resampling.get_particles()
 
         # Move robot
-                
+            
         # Move particles
 
 
