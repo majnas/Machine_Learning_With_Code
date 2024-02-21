@@ -28,6 +28,7 @@ def main(board_width, board_height, cell_size, num_particles, robot_speed, senso
 
     # Create Board
     board = Board(width=board_width, height=board_height, cell_size=cell_size)
+    print(board)
 
     # Create Robot
     robot_is_not_valid = True

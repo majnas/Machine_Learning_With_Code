@@ -34,6 +34,8 @@ class Particle(object):
         if x is None or y is None:
             x = self.x
             y = self.y
+        if x < 0 or y < 0:
+            return False
         if x >= self.board.width or y >= self.board.height:
             return False
         col = int(x / self.board.cell_size)

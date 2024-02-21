@@ -41,6 +41,8 @@ class Board():
         self.cell_size = cell_size
         self.n_cols = width // cell_size
         self.n_rows = height // cell_size
+        assert self.n_cols > 2, f"Increase width={self.width} or decrease cell_size={self.cell_size}"
+        assert self.n_rows > 2, f"Increase height={self.height} or decrease cell_size={self.cell_size}"
         self.generate_board()
         self.set_board_edges()
 
@@ -103,6 +105,9 @@ class Board():
         right = right - xrem
 
         return Sensors(up=up, down=down, left=left, right=right)
+        
+    def __str__(self):
+        return f"Board Information:\nWidth: {self.width}\nHeight: {self.height}\nCell Size: {self.cell_size}\nNumber of Rows: {self.n_rows}\nNumber of Columns: {self.n_cols}\n"
 
 
 def main():
