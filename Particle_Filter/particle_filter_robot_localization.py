@@ -5,6 +5,7 @@ import math
 import time
 import numpy as np
 from typing import List
+from icecream import ic
 
 from board import Board, Sensors
 from particle import Particle, Robot, Resampling
@@ -35,9 +36,12 @@ def main():
     board = Board(width=board_width, height=board_height, cell_size=cell_size)
 
     # Create Robot
-    x = np.random.uniform(0, board.width)
-    y = np.random.uniform(0, board.height)
-    robot = Robot(x=x, y=y, board=board, speed=robot_speed, sensor_limit=sensor_limit)
+    robot_is_not_valid = True
+    while robot_is_not_valid:
+        x = np.random.uniform(0, board.width)
+        y = np.random.uniform(0, board.height)    
+        robot = Robot(x=x, y=y, board=board, speed=robot_speed, sensor_limit=sensor_limit)
+        robot_is_not_valid = not robot.is_valid()
 
     # Create Particles
     particles: List[Particle] = list()
@@ -45,7 +49,7 @@ def main():
         x = np.random.uniform(0, board.width)
         y = np.random.uniform(0, board.height)
         particle = Particle(x=x, y=y, board=board)
-        if particle.is_valid:
+        if particle.is_valid():
             particles.append(particle)
 
     # time.sleep(1)
@@ -89,8 +93,10 @@ def main():
         particles = resampling.get_particles()
 
         # Move robot
-            
+    
         # Move particles
+        for particle in particles:
+            particle.try_move(speed=robot_speed)
 
 
         # Example usage of calculate_distance_to_wall method
@@ -103,6 +109,7 @@ def main():
 
         pygame.display.flip()
         clock.tick(1)
+        # running = False
 
     pygame.quit()
 
