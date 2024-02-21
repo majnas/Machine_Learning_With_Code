@@ -18,7 +18,8 @@ class Particle(object):
         self.sensor_limit = sensor_limit
 
         if noisy:
-            std = max(self.board.grid_height, self.board.grid_width) * 0.2
+            # std = max(self.board.grid_height, self.board.grid_width) * 0.2
+            std = max(self.board.cell_size, self.board.cell_size) * 0.2
             # self.x = self.add_noise(x = self.x, std = std)
             # self.y = self.add_noise(x = self.y, std = std)
             # self.heading = self.add_noise(x = self.heading, std = 360 * 0.05)
@@ -207,7 +208,7 @@ class Resampling():
 
     def get_particles(self):
         new_particles = []
-        for _ in range(len(self.particles)):
+        while len(new_particles) <= len(self.particles):
             # Select a particle index using roulette wheel selection
             index = np.random.choice(len(self.particles), p=self.probabilities)
             # Create a new particle as a copy of the selected one
@@ -218,6 +219,7 @@ class Resampling():
                                     weight=self.particles[index].weight,
                                     sensor_limit=self.particles[index].sensor_limit,
                                     noisy=True)
-            new_particles.append(new_particle)
+            if new_particle.is_valid:
+                new_particles.append(new_particle)
 
         return new_particles
