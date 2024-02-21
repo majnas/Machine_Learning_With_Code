@@ -81,11 +81,12 @@ class Particle(object):
             self.y = y
         return is_valid
 
-    def show(self, screen, color, radius: int = 5):
-        # Generate 100 blue colors from light blue to dark blue
-        blue_color_range = self.generate_blue_colors()
-        color_idx = int(self.weight * 99)
-        color = blue_color_range[color_idx]
+    def show(self, screen, color = None, radius: int = 5):
+        if color is None:
+            # Generate 100 blue colors from light blue to dark blue
+            blue_color_range = self.generate_blue_colors()
+            color_idx = int(self.weight * 99)
+            color = blue_color_range[color_idx]
         pygame.draw.circle(screen, color, (self.x, self.y), radius)
 
 
@@ -134,10 +135,8 @@ class Robot(Particle):
             self.time_step += 1
             if self.try_move(speed=self.speed):
                 break
-
-            # reflect your direction
-            self.heading = (self.heading + 15) % 360
-            # self.heading = np.random.uniform(0, 360)
+            # if hit the wall pick random heading
+            self.heading = np.random.uniform(0, 360)
 
 
 class Resampling():

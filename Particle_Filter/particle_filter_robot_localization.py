@@ -23,7 +23,7 @@ def main():
     board_width = 800
     board_height = 600
     cell_size = 20
-    num_particles = 100
+    num_particles = 500
     robot_speed = 10
     sensor_limit = 500
 
@@ -73,11 +73,15 @@ def main():
         for particle in particles:
             particle.weight = robot_sensors.gaussian_distance(particle.read_sensor()) 
 
+        # Show board
+        screen.fill(WHITE)
+        board.draw(screen)
+            
         # Show particles
         # Sort to show particles with heigher weight on top of others
         particles.sort(key=lambda particle: particle.weight)
         for particle in particles:
-            particle.show(screen=screen, color=BLUE)
+            particle.show(screen=screen)
 
         # Show robot
         robot.show(screen=screen, color=RED, radius=10)
@@ -93,23 +97,19 @@ def main():
         particles = resampling.get_particles()
 
         # Move robot
+        heading_old = robot.heading
+        robot.move()
+        heading_new = robot.heading
+        dh = heading_new - heading_old
     
         # Move particles
         for particle in particles:
+            # Move particle with same heading changes happened for robot
+            particle.heading = (particle.heading + dh) % 360
             particle.try_move(speed=robot_speed)
-
-
-        # Example usage of calculate_distance_to_wall method
-        # x, y = pygame.mouse.get_pos()
-        # distance: Distance = board.calculate_distance_to_wall(x, y)
-        # print(distance)
-    
-        # particle = Particle(x=x, y=y, board=board)
-        # print(particle.is_valid)
 
         pygame.display.flip()
         clock.tick(1)
-        # running = False
 
     pygame.quit()
 
