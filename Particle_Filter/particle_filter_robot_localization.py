@@ -70,8 +70,10 @@ def main():
             particle.weight = robot_sensors.gaussian_distance(particle.read_sensor()) 
 
         # Show particles
+        # Sort to show particles with heigher weight on top of others
+        particles.sort(key=lambda particle: particle.weight)
         for particle in particles:
-            particle.show(screen=screen, color=BLUE)        
+            particle.show(screen=screen, color=BLUE)
 
         # Show robot
         robot.show(screen=screen, color=RED, radius=10)
