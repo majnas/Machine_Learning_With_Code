@@ -30,6 +30,12 @@ class Sensors:
                                               (s2.up, s2.down, s2.left, s2.right))
         return np.exp(-distance ** 2 / (2 * std)) 
 
+    def add_noise(self, z = 0.05):
+        self.up += np.random.normal(0, self.up * z/2)
+        self.down += np.random.normal(0, self.down * z/2)
+        self.left += np.random.normal(0, self.left * z/2)
+        self.right += np.random.normal(0, self.right * z/2)
+
     def __str__(self) -> str:
         return f"Up: {self.up}, Left: {self.left}, Down: {self.down}, Right: {self.right}"
 

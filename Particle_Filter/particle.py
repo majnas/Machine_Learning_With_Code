@@ -1,7 +1,5 @@
 import pygame
 import random
-import sys
-import math
 import numpy as np
 from board import Sensors
 from icecream import ic
@@ -19,16 +17,10 @@ class Particle(object):
         self.sensor_limit = sensor_limit
 
         if noisy:
-            # std = max(self.board.grid_height, self.board.grid_width) * 0.2
             std = max(self.board.cell_size, self.board.cell_size) * 0.2
-            # self.x = self.add_noise(x = self.x, std = std)
-            # self.y = self.add_noise(x = self.y, std = std)
-            # self.heading = self.add_noise(x = self.heading, std = 360 * 0.05)
             self.x = self.x + np.random.normal(0, std)
             self.y = self.y + np.random.normal(0, std)
             self.heading = self.heading + np.random.normal(0, 360 * 0.05)
-
-        # self.is_valid = self.fix_invalid_particles()
 
     def is_valid(self, x = None, y = None):
         if x is None or y is None:
@@ -62,7 +54,7 @@ class Particle(object):
             blue_colors.append((r, g, b))
         return blue_colors
 
-    def read_sensor(self):
+    def read_sensor(self)-> Sensors:
         sensors: Sensors = self.board.read_sensors(self.x, self.y)
         sensors.apply_limit(sensor_limit=self.sensor_limit)
         return sensors
@@ -112,25 +104,12 @@ class Robot(Particle):
         self.time_step = 0
         self.speed = speed        
 
-    # def add_sensor_noise(self, x, z = 0.05):
-
-    #     readings = list(x)
-
-    #     for i in range(len(readings)):
-    #         std = readings[i] * z / 2
-    #         readings[i] = readings[i] + np.random.normal(0, std)
-
-    #     return readings
-
-    # def read_sensor(self, board):
-
-    #     # Robot has error in reading the sensor while particles do not.
-
-    #     readings = super(Robot, self).read_sensor(board = board)
-    #     if self.noisy == True:
-    #         readings = self.add_sensor_noise(x = readings)
-
-    #     return readings
+    def read_sensor(self)-> Sensors:
+        # Robot has error in reading the sensor while particles do not.
+        sensors = super(Robot, self).read_sensor()
+        if self.noisy == True:
+            sensors.add_noise()
+        return sensors
 
     def move(self):
         while True:

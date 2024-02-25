@@ -1,9 +1,6 @@
 import pygame
 import pygame.font
 import random
-import sys
-import math
-import time
 import numpy as np
 from typing import List
 from icecream import ic
@@ -24,7 +21,7 @@ WHITE = (255, 255, 255)
 def main(board_width, board_height, cell_size, num_particles, robot_speed, sensor_limit, step_by_keyboard):
     pygame.init()
     screen = pygame.display.set_mode((board_width, board_height))
-    pygame.display.set_caption("Particle Filter Turtle Localization")
+    pygame.display.set_caption("Particle Filter Robot Localization")
     clock = pygame.time.Clock()
 
     # Create Board
@@ -47,8 +44,6 @@ def main(board_width, board_height, cell_size, num_particles, robot_speed, senso
         particle = Particle(x=x, y=y, board=board)
         if particle.is_valid():
             particles.append(particle)
-
-    # time.sleep(1)
 
     screen.fill(WHITE)
     board.draw(screen)
