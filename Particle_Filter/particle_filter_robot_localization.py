@@ -1,4 +1,5 @@
 import pygame
+import pygame.font
 import random
 import sys
 import math
@@ -82,12 +83,26 @@ def main(board_width, board_height, cell_size, num_particles, robot_speed, senso
             # Show board
             screen.fill(WHITE)
             board.draw(screen)
-                
+
+            # Show step number
+            font = pygame.font.SysFont('Comic Sans MS', 20)
+            step_text = font.render(f"Step: {step}", True, WHITE)
+            robot_text = font.render(f"--Robot", True, RED)
+            particles_text = font.render(f"--Particles", True, BLUE)
+            best_particle_text = font.render(f"--Best Particle", True, YELLOW)
+            screen.blit(step_text, (5, 5))
+            screen.blit(robot_text, (70, 5))
+            screen.blit(particles_text, (130, 5))
+            screen.blit(best_particle_text, (210, 5))
+
             # Show particles
             # Sort to show particles with heigher weight on top of others
             particles.sort(key=lambda particle: particle.weight)
             for particle in particles:
                 particle.show(screen=screen)
+
+            # Show the particle with heigest probablity in yellow
+            particles[-1].show(screen=screen, color=YELLOW, radius=10)
 
             # Show robot
             robot.show(screen=screen, color=RED, radius=10)
