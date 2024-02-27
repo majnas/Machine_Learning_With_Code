@@ -1,8 +1,6 @@
 import pygame
-import random
 import numpy as np
 from board import Sensors
-from icecream import ic
 
 class Particle(object):
     """

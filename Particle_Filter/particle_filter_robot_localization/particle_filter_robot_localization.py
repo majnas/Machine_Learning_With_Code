@@ -1,9 +1,7 @@
 import pygame
 import pygame.font
-import random
 import numpy as np
 from typing import List
-from icecream import ic
 import argparse
 
 from board import Board, Sensors
@@ -69,7 +67,7 @@ def main(board_width, board_height, cell_size, num_particles, robot_speed, senso
             print(f"Step {step} ...")
 
             # Read robot sensor
-            robot_sensors = robot.read_sensor()
+            robot_sensors: Sensors = robot.read_sensor()
                     
             # Read particle sensors and update particle weight
             for particle in particles:
