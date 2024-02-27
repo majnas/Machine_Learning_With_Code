@@ -3,25 +3,25 @@
 This repository contains a Python script using the Pygame library to implement a simple particle filter for tracking the mouse cursor.
 
 <div align="center">
-  <img src="5.gif" alt="Particle Filter Robot Localization" width="125%">
+  <img src="data/5.gif" alt="Particle Filter Robot Localization" width="125%">
 </div>
 
 # More samples
 <table style="width:100%">
   <tr>
     <td style="text-align:center; padding: 5px;">
-      <img src="1.gif" alt="Image 1" style="width: 100%;">
+      <img src="data/1.gif" alt="Image 1" style="width: 100%;">
     </td>
     <td style="text-align:center; padding: 5px;">
-      <img src="2.gif" alt="Image 2" style="width: 100%;">
+      <img src="data/2.gif" alt="Image 2" style="width: 100%;">
     </td>
   </tr>
   <tr>
     <td style="text-align:center; padding: 5px;">
-      <img src="3.gif" alt="Image 3" style="width: 100%;">
+      <img src="data/3.gif" alt="Image 3" style="width: 100%;">
     </td>
     <td style="text-align:center; padding: 5px;">
-      <img src="4.gif" alt="Image 4" style="width: 100%;">
+      <img src="data/4.gif" alt="Image 4" style="width: 100%;">
     </td>
   </tr>
 </table>
