@@ -1,0 +1,87 @@
+import pygame
+from queue import PriorityQueue
+from node import Node
+from typing import List, Tuple
+from icecream import ic
+from time import sleep
+
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+TURQUOISE = (64, 224, 208)
+PURPLE = (128, 0, 128)
+
+        
+def h(p1, p2):
+    x1, y1 = p1
+    x2, y2 = p2
+    return abs(x1 - x2) + abs(y1 - y2)
+
+def reconstruct_path(came_from, current, draw):
+    while current in came_from:
+        current = came_from[current]
+        current.make_path()
+        draw()
+
+def a_star_algorithm(draw, grid: List[List[Node]], start: Node, end: Node):
+    count = 0
+    open_set = PriorityQueue()
+    open_set.put((0, count, start))
+    came_from = {}
+    g_score = {node: float("inf") for row in grid for node in row}
+    g_score[start] = 0
+    f_score = {node: float("inf") for row in grid for node in row}
+    f_score[start] = h(start.get_pos(), end.get_pos())
+
+    open_set_hash = {start}
+
+    loop = 0
+    while not open_set.empty():        
+        print("----------")
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit() 
+
+        current: Node = open_set.get()
+        current = current[2]
+        open_set_hash.remove(current)
+        print("remove from open_set_hash", current)
+
+        if current == end:
+            reconstruct_path(came_from, end, draw)
+            end.make_end()
+            return True
+
+        for neighbor in current.neighbors:
+            temp_g_score = g_score[current] + 1
+            # ic(temp_g_score)
+
+            if temp_g_score < g_score[neighbor]:
+                came_from[neighbor] = current
+                g_score[neighbor] = temp_g_score
+                f_score[neighbor] = temp_g_score + h(neighbor.get_pos(), end.get_pos())
+                if neighbor not in open_set_hash:
+                    count += 1
+                    print("add to open_set", (f_score[neighbor], count, neighbor), neighbor)
+                    open_set.put((f_score[neighbor], count, neighbor))
+                    open_set_hash.add(neighbor)
+                    neighbor.make_open()
+
+        draw()
+        sleep(5)
+
+
+        
+        print("open_set.qsize()", open_set.qsize())
+        print("open_set_hash:")
+        for n in open_set_hash:
+            print(n)
+
+        # loop += 1
+        # if loop == 3:
+        #     QQ
+
+        if current != start:
+            current.make_closed()
+
+
+    return False
