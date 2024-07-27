@@ -36,15 +36,12 @@ def a_star_algorithm(draw, grid: List[List[Node]], start: Node, end: Node):
 
     loop = 0
     while not open_set.empty():        
-        print("----------")
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit() 
 
-        current: Node = open_set.get()
-        current = current[2]
+        current: Node = open_set.get()[2]
         open_set_hash.remove(current)
-        print("remove from open_set_hash", current)
 
         if current == end:
             reconstruct_path(came_from, end, draw)
@@ -53,7 +50,6 @@ def a_star_algorithm(draw, grid: List[List[Node]], start: Node, end: Node):
 
         for neighbor in current.neighbors:
             temp_g_score = g_score[current] + 1
-            # ic(temp_g_score)
 
             if temp_g_score < g_score[neighbor]:
                 came_from[neighbor] = current
@@ -61,25 +57,12 @@ def a_star_algorithm(draw, grid: List[List[Node]], start: Node, end: Node):
                 f_score[neighbor] = temp_g_score + h(neighbor.get_pos(), end.get_pos())
                 if neighbor not in open_set_hash:
                     count += 1
-                    print("add to open_set", (f_score[neighbor], count, neighbor), neighbor)
                     open_set.put((f_score[neighbor], count, neighbor))
                     open_set_hash.add(neighbor)
                     neighbor.make_open()
 
         draw()
-        sleep(5)
-
-
         
-        print("open_set.qsize()", open_set.qsize())
-        print("open_set_hash:")
-        for n in open_set_hash:
-            print(n)
-
-        # loop += 1
-        # if loop == 3:
-        #     QQ
-
         if current != start:
             current.make_closed()
 
