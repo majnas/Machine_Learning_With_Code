@@ -11,19 +11,9 @@ TURQUOISE = (64, 224, 208)
 PURPLE = (128, 0, 128)
 
 
-HEX_LEN = 30
-HEX_SIN_LEN = math.sin(math.radians(60)) * HEX_LEN
-HEX_COS_LEN = math.cos(math.radians(60)) * HEX_LEN
-HEX_POINTS = [(HEX_LEN, 0), 
-              (HEX_LEN-HEX_COS_LEN, HEX_SIN_LEN), 
-              (HEX_COS_LEN-HEX_LEN, HEX_SIN_LEN),
-              (-HEX_LEN, 0), 
-              (HEX_COS_LEN-HEX_LEN, -HEX_SIN_LEN), 
-              (HEX_LEN-HEX_COS_LEN, -HEX_SIN_LEN)]
-
 
 class HexNode:
-    def __init__(self, row, col, hex_len, total_rows, total_cols) -> None:
+    def __init__(self, row, col, hex_len, hex_sin_len, hex_cos_len, hex_polygon, total_rows, total_cols) -> None:
         self.row = row
         self.col = col
         self.hex_len = hex_len
@@ -33,15 +23,15 @@ class HexNode:
 
         if col % 2 == 0:
             self.x = hex_len + (col // 2) * 3 * hex_len
-            self.y = (2 * row + 1) * HEX_SIN_LEN
+            self.y = (2 * row + 1) * hex_sin_len
         else:
-            self.x = HEX_COS_LEN + 2 * hex_len + (col // 2) * 3 * hex_len
-            self.y = 2 * (row + 1) * HEX_SIN_LEN
+            self.x = hex_cos_len + 2 * hex_len + (col // 2) * 3 * hex_len
+            self.y = 2 * (row + 1) * hex_sin_len
 
-        self.points = [(x + self.x, y + self.y) for x, y in HEX_POINTS]
-        self.tiel_rect = pygame.Rect(0, 0, hex_len * 2, HEX_SIN_LEN * 2)
+        self.points = [(x + self.x, y + self.y) for x, y in hex_polygon]
+        self.tiel_rect = pygame.Rect(0, 0, hex_len * 2, hex_sin_len * 2)
         self.tiel_rect.center = (self.x, self.y)
-        self.color = "white"
+        self.color = "gray"
 
     def get_pos(self):
         return self.row, self.col
@@ -120,12 +110,28 @@ class Board:
         self.cols = cols
         self.length = length
         self.grid = []
+        self.width = 100
+        self.height = 100
 
     def make_hex_grid(self):
+        hex_sin_len = math.sin(math.radians(60)) * self.length
+        hex_cos_len = math.cos(math.radians(60)) * self.length
+        hex_polygon = [(self.length, 0), 
+                      (self.length - hex_cos_len, hex_sin_len), 
+                      (hex_cos_len - self.length, hex_sin_len),
+                      (-self.length, 0), 
+                      (hex_cos_len - self.length, -hex_sin_len), 
+                      (self.length - hex_cos_len, -hex_sin_len)]
+
         for row in range(self.rows):
             self.grid.append([])
             for col in range(self.cols):
-                self.grid[row].append(HexNode(row, col, self.length, self.rows, self.cols))
+                self.grid[row].append(HexNode(row, col, self.length, hex_sin_len, hex_cos_len, hex_polygon, self.rows, self.cols))
+
+        # update width and height
+        self.width = (self.cols // 2) * 3 * self.length + (hex_cos_len if self.cols % 2 == 0 else 2 * self.length)
+        self.height = (2 * self.rows + 1 ) * hex_sin_len
+
 
 
 if __name__ == "__main__":
