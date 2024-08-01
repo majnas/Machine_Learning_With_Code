@@ -8,6 +8,8 @@ GREEN = (0, 255, 0)
 ORANGE = (255, 165, 0)
 TURQUOISE = (64, 224, 208)
 PURPLE = (128, 0, 128)
+GREY = (128, 128, 128)
+
 
 class Node:
     def __init__(self, row, col, width, total_rows):
@@ -81,3 +83,53 @@ class Node:
 
     def __str__(self):
         return f"({self.row}, {self.col})"
+
+
+
+class Board:
+    def __init__(self, rows, cols, length) -> None:
+        self.rows = rows
+        self.cols = cols
+        self.length = length
+        self.grid: List[List["Node"]] = []
+        self.width = 100
+        self.height = 100
+
+
+    def make_grid(self, rows: int, width: int):
+        grid: List[List[Node]] = []
+        gap = width // rows
+        for i in range(rows):
+            grid.append([])
+            for j in range(rows):
+                node: Node = Node(i, j, gap, rows)
+                grid[i].append(node)
+        return grid
+    
+    def draw_grid(self, win, rows: int, width: int):
+        gap = width // rows
+        for i in range(rows):
+            pygame.draw.line(win, GREY, (0, i * gap), (width, i * gap))
+            for j in range(rows):
+                pygame.draw.line(win, GREY, (j * gap, 0), (j * gap, width))
+
+
+    # Draw the grid and its elements
+    def draw(self, win, grid, rows, width):
+        win.fill(WHITE)
+
+        for row in grid:
+            for node in row:
+                node.draw(win)
+
+        self.draw_grid(win, rows, width)
+        pygame.display.update()
+
+
+    def get_clicked_pos(self, pos, rows: int, width: int):
+        gap = width // rows
+        y, x = pos
+        row = y // gap
+        col = x // gap
+        return row, col
+
