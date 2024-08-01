@@ -15,7 +15,7 @@ GRAY = (142, 142, 142)
 
 
 class Node:
-    def __init__(self, row, col, length, total_rows):
+    def __init__(self, row, col, length, total_rows, total_cols):
         self.row = row
         self.col = col
         self.x = col * length
@@ -24,6 +24,7 @@ class Node:
         self.neighbors = []
         self.length = length
         self.total_rows = total_rows
+        self.total_cols = total_cols
 
     def get_pos(self):
         return self.row, self.col
@@ -75,7 +76,7 @@ class Node:
         if self.row > 0 and not grid[self.row - 1][self.col].is_barrier(): # Up
             self.neighbors.append(grid[self.row - 1][self.col])
 
-        if self.col < self.total_rows - 1 and not grid[self.row][self.col + 1].is_barrier(): # Right
+        if self.col < self.total_cols - 1 and not grid[self.row][self.col + 1].is_barrier(): # Right
             self.neighbors.append(grid[self.row][self.col + 1])
 
         if self.col > 0 and not grid[self.row][self.col - 1].is_barrier(): # Left
@@ -84,8 +85,8 @@ class Node:
     def __lt__(self, other):
         return False
 
-    def __str__(self):
-        return f"({self.row}, {self.col})"
+    def __str__(self) -> str:
+        return f"({self.row, self.col}) xy=({self.x, self.y}, c={self.color})"
 
 
 
@@ -103,7 +104,7 @@ class SquareBoard(Board):
         for i in range(self.rows):
             self.grid.append([])
             for j in range(self.cols):
-                node: Node = Node(i, j, self.length, self.rows)
+                node: Node = Node(i, j, self.length, self.rows, self.cols)
                 self.grid[i].append(node)
     
     def draw_grid(self, win):
