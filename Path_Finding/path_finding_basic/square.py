@@ -98,13 +98,12 @@ class SquareBoard(Board):
         self.height = rows * length
 
     def make_grid(self):
-        grid: List[List[Node]] = []
+        self.grid: List[List[Node]] = []
         for i in range(self.rows):
-            grid.append([])
+            self.grid.append([])
             for j in range(self.cols):
                 node: Node = Node(i, j, self.length, self.rows)
-                grid[i].append(node)
-        return grid
+                self.grid[i].append(node)
     
     def draw_grid(self, win):
         for i in range(self.rows):
@@ -114,10 +113,10 @@ class SquareBoard(Board):
             pygame.draw.line(win, GREY, (j * self.length, 0), (j * self.length, self.rows * self.length))
 
     # Draw the grid and its elements
-    def draw(self, win, grid):
+    def draw(self, win):
         win.fill(WHITE)
 
-        for row in grid:
+        for row in self.grid:
             for node in row:
                 node.draw(win)
 

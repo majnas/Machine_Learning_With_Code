@@ -7,7 +7,7 @@ from square import SquareBoard
 from hex import HexBoard
 
 def main(win, board):
-    grid: List[List[Node]]  = board.make_grid()
+    board.make_grid()
     start = None
     end = None
 
@@ -15,7 +15,7 @@ def main(win, board):
     started = False
 
     while run:
-        board.draw(win, grid)
+        board.draw(win)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -26,7 +26,7 @@ def main(win, board):
             if pygame.mouse.get_pressed()[0]: # LEFT
                 pos = pygame.mouse.get_pos()
                 row, col = board.get_clicked_pos(pos)
-                node: Node = grid[row][col]
+                node: Node = board.grid[row][col]
 
                 # set start
                 if not start and node != end:
@@ -45,7 +45,7 @@ def main(win, board):
             elif pygame.mouse.get_pressed()[2]: # RIGHT
                 pos = pygame.mouse.get_pos()
                 row, col = board.get_clicked_pos(pos)
-                node: Node = grid[row][col]
+                node: Node = board.grid[row][col]
                 node.reset()
                 if node == start:
                     start = None
@@ -54,16 +54,16 @@ def main(win, board):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and start and end:
-                    for row in grid:
+                    for row in board.grid:
                         for node in row:
-                            node.update_neighbors(grid)
+                            node.update_neighbors(board.grid)
 
-                    a_star_algorithm(lambda: board.draw(win, grid), grid, start, end)
+                    a_star_algorithm(lambda: board.draw(win), board.grid, start, end)
 
                 if event.key == pygame.K_c:
                     start = None
                     end = None
-                    grid = board.make_grid()
+                    board.make_grid()
 
     pygame.quit()
 
