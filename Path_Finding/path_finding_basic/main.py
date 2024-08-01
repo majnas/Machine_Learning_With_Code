@@ -1,4 +1,6 @@
+import sys
 import pygame
+import argparse
 from square import Node
 from a_star import a_star_algorithm
 from typing import List
@@ -19,6 +21,9 @@ def main(win, board):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
+                    run = False
 
             if started:
                 continue
@@ -69,14 +74,24 @@ def main(win, board):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('shape', choices=['square', 'hex'], default='hex', nargs='?', help="Choose between 'square' or 'hex' (default: 'hex')")
+    args = parser.parse_args()
+
     ROWS = 10
     COLS = 40
     LENGTH = 20
 
     WIDTH = LENGTH * COLS
 
-    board = SquareBoard(rows=ROWS, cols=COLS, length=LENGTH)
-    # board = HexBoard(rows=ROWS, cols=COLS, length=LENGTH)
+    if args.shape == "square":
+        board = SquareBoard(rows=ROWS, cols=COLS, length=LENGTH)
+    elif args.shape == "hex":
+        board = HexBoard(rows=ROWS, cols=COLS, length=LENGTH)
+    else:
+        print("Borad shape not supported!")
+        sys.exit()
+
     board.make_grid()
 
     win = pygame.display.set_mode((board.width, board.height))

@@ -10,18 +10,19 @@ GREEN = (0, 255, 0)
 ORANGE = (255, 165, 0)
 TURQUOISE = (64, 224, 208)
 PURPLE = (128, 0, 128)
-GREY = (128, 128, 128)
+YELLOW = (255, 211, 0)
+GRAY = (142, 142, 142)
 
 
 class Node:
-    def __init__(self, row, col, width, total_rows):
+    def __init__(self, row, col, length, total_rows):
         self.row = row
         self.col = col
-        self.x = col * width
-        self.y = row * width
+        self.x = col * length
+        self.y = row * length
         self.color = WHITE
         self.neighbors = []
-        self.width = width
+        self.length = length
         self.total_rows = total_rows
 
     def get_pos(self):
@@ -64,7 +65,7 @@ class Node:
         self.color = PURPLE
 
     def draw(self, win):
-        pygame.draw.rect(win, self.color, (self.x, self.y, self.width, self.width))
+        pygame.draw.rect(win, self.color, (self.x, self.y, self.length, self.length))
 
     def update_neighbors(self, grid: List[List["Node"]]):
         self.neighbors: List[Node] = []
@@ -107,10 +108,10 @@ class SquareBoard(Board):
     
     def draw_grid(self, win):
         for i in range(self.rows):
-            pygame.draw.line(win, GREY, (0, i * self.length), (self.cols * self.length, i * self.length))
+            pygame.draw.line(win, GRAY, (0, i * self.length), (self.cols * self.length, i * self.length))
 
         for j in range(self.cols):
-            pygame.draw.line(win, GREY, (j * self.length, 0), (j * self.length, self.rows * self.length))
+            pygame.draw.line(win, GRAY, (j * self.length, 0), (j * self.length, self.rows * self.length))
 
     # Draw the grid and its elements
     def draw(self, win):
