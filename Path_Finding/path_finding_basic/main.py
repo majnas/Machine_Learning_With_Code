@@ -76,18 +76,15 @@ def main(win, board):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('shape', choices=['square', 'hex'], default='hex', nargs='?', help="Choose between 'square' or 'hex' (default: 'hex')")
+    parser.add_argument('--rows', '-r', type=int, default=20, help='Number of rows')
+    parser.add_argument('--cols', '-c', type=int, default=30, help='Number of columns')
+    parser.add_argument('--length', '-l', type=int, default=30, help='Length of each cell in board')
     args = parser.parse_args()
 
-    ROWS = 10
-    COLS = 40
-    LENGTH = 20
-
-    WIDTH = LENGTH * COLS
-
     if args.shape == "square":
-        board = SquareBoard(rows=ROWS, cols=COLS, length=LENGTH)
+        board = SquareBoard(rows=args.rows, cols=args.cols, length=args.length)
     elif args.shape == "hex":
-        board = HexBoard(rows=ROWS, cols=COLS, length=LENGTH)
+        board = HexBoard(rows=args.rows, cols=args.cols, length=args.length)
     else:
         print("Borad shape not supported!")
         sys.exit()
