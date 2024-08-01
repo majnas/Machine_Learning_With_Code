@@ -1,4 +1,5 @@
 import pygame, math
+from board import Board
 from shapely.geometry import Point, Polygon
 from typing import List
 from icecream import ic
@@ -14,7 +15,7 @@ YELLOW = (255, 211, 0)
 GRAY = (142, 142, 142)
 
 
-class HexNode:
+class Node:
     def __init__(self, row, col, hex_len, hex_sin_len, hex_cos_len, hex_polygon, total_rows, total_cols) -> None:
         self.row = row
         self.col = col
@@ -89,8 +90,8 @@ class HexNode:
             pygame.draw.line(screen, (0, 0, 0), self.points[i], self.points[(i + 1) % len(self.points)], 5)
 
 
-    def update_neighbors(self, grid: List[List["HexNode"]]):
-        self.neighbors: List[HexNode] = []
+    def update_neighbors(self, grid: List[List["Node"]]):
+        self.neighbors: List[Node] = []
 
         if self.row > 0 and not grid[self.row - 1][self.col].is_barrier(): # Up
             self.neighbors.append(grid[self.row - 1][self.col])
@@ -115,16 +116,16 @@ class HexNode:
 
 
 
-class Board:
+class HexBoard(Board):
     def __init__(self, rows, cols, length) -> None:
         self.rows = rows
         self.cols = cols
         self.length = length
-        self.grid: List[List["HexNode"]] = []
+        self.grid: List[List["Node"]] = []
         self.width = 100
         self.height = 100
 
-    def make_hex_grid(self):
+    def make_grid(self):
         hex_sin_len = math.sin(math.radians(60)) * self.length
         hex_cos_len = math.cos(math.radians(60)) * self.length
         hex_polygon = [(self.length, 0), 
@@ -137,7 +138,7 @@ class Board:
         for row in range(self.rows):
             self.grid.append([])
             for col in range(self.cols):
-                self.grid[row].append(HexNode(row, col, self.length, hex_sin_len, hex_cos_len, hex_polygon, self.rows, self.cols))
+                self.grid[row].append(Node(row, col, self.length, hex_sin_len, hex_cos_len, hex_polygon, self.rows, self.cols))
 
         # update width and height
         self.width = (self.cols // 2) * 3 * self.length + (hex_cos_len if self.cols % 2 == 0 else 2 * self.length)

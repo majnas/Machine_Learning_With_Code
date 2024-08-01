@@ -1,6 +1,6 @@
 import pygame
 from queue import PriorityQueue
-from grid_org import Node
+from square import Node
 from typing import List, Tuple
 from icecream import ic
 from time import sleep

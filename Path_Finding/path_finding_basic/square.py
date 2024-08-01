@@ -1,5 +1,7 @@
 import pygame
+from board import Board
 from typing import List
+from icecream import ic
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -15,8 +17,8 @@ class Node:
     def __init__(self, row, col, width, total_rows):
         self.row = row
         self.col = col
-        self.x = row * width
-        self.y = col * width
+        self.x = col * width
+        self.y = row * width
         self.color = WHITE
         self.neighbors = []
         self.width = width
@@ -86,50 +88,46 @@ class Node:
 
 
 
-class Board:
+class SquareBoard(Board):
     def __init__(self, rows, cols, length) -> None:
         self.rows = rows
         self.cols = cols
         self.length = length
         self.grid: List[List["Node"]] = []
-        self.width = 100
-        self.height = 100
+        self.width = cols * length
+        self.height = rows * length
 
-
-    def make_grid(self, rows: int, width: int):
+    def make_grid(self):
         grid: List[List[Node]] = []
-        gap = width // rows
-        for i in range(rows):
+        for i in range(self.rows):
             grid.append([])
-            for j in range(rows):
-                node: Node = Node(i, j, gap, rows)
+            for j in range(self.cols):
+                node: Node = Node(i, j, self.length, self.rows)
                 grid[i].append(node)
         return grid
     
-    def draw_grid(self, win, rows: int, width: int):
-        gap = width // rows
-        for i in range(rows):
-            pygame.draw.line(win, GREY, (0, i * gap), (width, i * gap))
-            for j in range(rows):
-                pygame.draw.line(win, GREY, (j * gap, 0), (j * gap, width))
+    def draw_grid(self, win):
+        for i in range(self.rows):
+            pygame.draw.line(win, GREY, (0, i * self.length), (self.cols * self.length, i * self.length))
 
+        for j in range(self.cols):
+            pygame.draw.line(win, GREY, (j * self.length, 0), (j * self.length, self.rows * self.length))
 
     # Draw the grid and its elements
-    def draw(self, win, grid, rows, width):
+    def draw(self, win, grid):
         win.fill(WHITE)
 
         for row in grid:
             for node in row:
                 node.draw(win)
 
-        self.draw_grid(win, rows, width)
+        self.draw_grid(win)
         pygame.display.update()
 
 
-    def get_clicked_pos(self, pos, rows: int, width: int):
-        gap = width // rows
-        y, x = pos
-        row = y // gap
-        col = x // gap
+    def get_clicked_pos(self, pos):
+        x, y = pos
+        row = y // self.length
+        col = x // self.length
         return row, col
 
