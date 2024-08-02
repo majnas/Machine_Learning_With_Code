@@ -16,25 +16,25 @@ GRAY = (142, 142, 142)
 
 
 class Node:
-    def __init__(self, row, col, hex_len, hex_sin_len, hex_cos_len, hex_polygon, total_rows, total_cols) -> None:
+    def __init__(self, row, col, length, hex_sin_len, hex_cos_len, hex_polygon, total_rows, total_cols) -> None:
         self.row = row
         self.col = col
-        self.hex_len = hex_len
+        self.length = length
+        self.color = GRAY
         self.neighbors = []
         self.total_rows = total_rows
         self.total_cols = total_cols
 
         if col % 2 == 0:
-            self.x = hex_len + (col // 2) * 3 * hex_len
+            self.x = length + (col // 2) * 3 * length
             self.y = (2 * row + 1) * hex_sin_len
         else:
-            self.x = hex_cos_len + 2 * hex_len + (col // 2) * 3 * hex_len
+            self.x = hex_cos_len + 2 * length + (col // 2) * 3 * length
             self.y = 2 * (row + 1) * hex_sin_len
 
         self.points = [(x + self.x, y + self.y) for x, y in hex_polygon]
-        # self.tiel_rect = pygame.Rect(0, 0, hex_len * 2, hex_sin_len * 2)
+        # self.tiel_rect = pygame.Rect(0, 0, length * 2, hex_sin_len * 2)
         # self.tiel_rect.center = (self.x, self.y)
-        self.color = GRAY
 
     def get_pos(self):
         return self.row, self.col
@@ -50,20 +50,18 @@ class Node:
 
     def is_start(self):
         return self.color == ORANGE
-
+    
     def is_end(self):
         return self.color == TURQUOISE
 
     def reset(self):
         self.color = GRAY
-        print("resettttt")
 
     def is_highlight(self):
         return self.color == YELLOW
 
     def make_start(self):
         self.color = ORANGE
-        print("make_start")
 
     def make_closed(self):
         self.color = RED
@@ -80,15 +78,9 @@ class Node:
     def make_path(self):
         self.color = PURPLE
 
-    def make_highlight(self):
-        self.color = YELLOW
 
-
-    def draw(self, screen):
-        pygame.draw.polygon(screen, self.color, self.points)
-        for i in range(len(self.points)):
-            pygame.draw.line(screen, (0, 0, 0), self.points[i], self.points[(i + 1) % len(self.points)], 5)
-
+    def draw(self, win):
+        pygame.draw.polygon(win, self.color, self.points)
 
     def update_neighbors(self, grid: List[List["Node"]]):
         self.neighbors: List[Node] = []
@@ -135,6 +127,7 @@ class HexBoard(Board):
                       (hex_cos_len - self.length, -hex_sin_len), 
                       (self.length - hex_cos_len, -hex_sin_len)]
 
+        self.grid = []
         for row in range(self.rows):
             self.grid.append([])
             for col in range(self.cols):
@@ -144,9 +137,22 @@ class HexBoard(Board):
         self.width = (self.cols // 2) * 3 * self.length + (hex_cos_len if self.cols % 2 == 0 else 2 * self.length)
         self.height = (2 * self.rows + 1 ) * hex_sin_len
 
+    def draw_grid(self, win):
+        for row in self.grid:
+            for node in row:
+                for i in range(len(node.points)):
+                    pygame.draw.line(win, BLACK, node.points[i], node.points[(i + 1) % len(node.points)], 1)
+
+    def draw(self, win):
+        win.fill(WHITE)
+        for ridx in range(self.rows):
+            for cidx in range(self.cols):
+                self.grid[ridx][cidx].draw(win)
+        self.draw_grid(win)
+        pygame.display.update()
+
+
     def get_clicked_pos(self, pos):
-        # TODO make this more efficient
-        ic(pos)
         point = Point(pos)
         for row in self.grid:
             for node in row:
@@ -155,79 +161,3 @@ class HexBoard(Board):
                 if is_inside:
                     return node.row, node.col
         return None
-
-    def get_clicked_node(self, pos):
-        # TODO make this more efficient
-        ic(pos)
-        point = Point(pos)
-        for row in self.grid:
-            for node in row:
-                polygon = Polygon(node.points)
-                is_inside = polygon.contains(point)
-                if is_inside:
-                    return node
-        return None
-
-    # def update_highlight(self, pos):
-    #     point = Point(pos)
-    #     for row in self.grid:
-    #         for node in row:
-    #             polygon = Polygon(node.points)
-    #             is_inside = polygon.contains(point)                
-
-    #             if node.is_highlight():
-    #                 node.reset()
-
-    #             if is_inside:
-    #                 node.make_highlight()
-
-    def draw(self, win):
-        win.fill(WHITE)
-        for row in self.grid:
-            for node in row:
-                if node.color == ORANGE:
-                    print("---------------------------------------------------------------")
-                node.draw(win)
-        # draw_grid(win, rows, width)
-        pygame.display.update()
-
-
-
-if __name__ == "__main__":
-    pygame.init()
-    screen = pygame.display.set_mode((400, 400))
-    clock = pygame.time.Clock()
-
-    def collideHexagon(bounding_rect, position):
-        px, py = position
-        if bounding_rect.collidepoint((px, py)):
-            dx = min(px - bounding_rect.left, bounding_rect.right - px)
-            dy = abs(py - bounding_rect.centery)
-            if dy < dx * math.tan(math.radians(60)):
-                return True
-        return False
-
-    ROWS = 5
-    COLS = 10
-    board = Board(rows=ROWS, cols=COLS, length=30)
-    board.make_hex_grid()
-
-    run = True
-    while run:
-        clock.tick(100)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-
-        # color = "white"
-        # if collideHexagon(hex.tiel_rect, pygame.mouse.get_pos()):
-        #     color = "red"
-    
-        screen.fill(0)
-        for row in board.grid:
-            for node in row:
-                node.draw(screen)
-        pygame.display.flip() 
-
-    pygame.quit()
-    exit()

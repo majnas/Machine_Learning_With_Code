@@ -7,11 +7,16 @@ from typing import List
 from icecream import ic
 from square import SquareBoard
 from hex import HexBoard
+import random
 
 def main(win, board):
     board.make_grid()
     start = None
-    end = None
+    # end = None
+
+    end_row, end_col = random.randint(0, board.rows - 1), random.randint(0, board.cols - 1)
+    end = board.grid[end_row][end_col]
+    end.make_end()
 
     run = True
     started = False
@@ -30,35 +35,39 @@ def main(win, board):
 
             if pygame.mouse.get_pressed()[0]: # LEFT
                 pos = pygame.mouse.get_pos()
-                row, col = board.get_clicked_pos(pos)
-                node: Node = board.grid[row][col]
+                row_col = board.get_clicked_pos(pos)
+                if row_col is not None:
+                    row, col = row_col
+                    node: Node = board.grid[row][col]
 
-                # set start
-                if not start and node != end:
-                    start = node
-                    start.make_start()
+                    # set start
+                    if not start and node != end:
+                        start = node
+                        start.make_start()
 
-                # set end
-                elif not end and node != start:
-                    end = node
-                    end.make_end()
+                    # # set end
+                    # elif not end and node != start:
+                    #     end = node
+                    #     end.make_end()
 
-                # set barrier
-                elif node != end and node != start:
-                    node.make_barrier()
+                    # set barrier
+                    elif node != end and node != start:
+                        node.make_barrier()
 
             elif pygame.mouse.get_pressed()[2]: # RIGHT
                 pos = pygame.mouse.get_pos()
-                row, col = board.get_clicked_pos(pos)
-                node: Node = board.grid[row][col]
-                node.reset()
-                if node == start:
-                    start = None
-                elif node == end:
-                    end = None
+                row_col = board.get_clicked_pos(pos)
+                if row_col is not None:
+                    row, col = row_col
+                    node: Node = board.grid[row][col]
+                    node.reset()
+                    if node == start:
+                        start = None
+                    # elif node == end:
+                    #     end = None
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and start and end:
+                if event.key == pygame.K_SPACE and start:# and end:
                     for row in board.grid:
                         for node in row:
                             node.update_neighbors(board.grid)
@@ -67,8 +76,13 @@ def main(win, board):
 
                 if event.key == pygame.K_c:
                     start = None
-                    end = None
                     board.make_grid()
+
+                    # end = None
+                    end_row, end_col = random.randint(0, board.rows - 1), random.randint(0, board.cols - 1)
+                    end = board.grid[end_row][end_col]
+                    end.make_end()
+
 
     pygame.quit()
 
@@ -76,8 +90,8 @@ def main(win, board):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('shape', choices=['square', 'hex'], default='hex', nargs='?', help="Choose between 'square' or 'hex' (default: 'hex')")
-    parser.add_argument('--rows', '-r', type=int, default=20, help='Number of rows')
-    parser.add_argument('--cols', '-c', type=int, default=30, help='Number of columns')
+    parser.add_argument('--rows', '-r', type=int, default=15, help='Number of rows')
+    parser.add_argument('--cols', '-c', type=int, default=25, help='Number of columns')
     parser.add_argument('--length', '-l', type=int, default=30, help='Length of each cell in board')
     args = parser.parse_args()
 

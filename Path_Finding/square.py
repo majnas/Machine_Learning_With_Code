@@ -20,7 +20,7 @@ class Node:
         self.col = col
         self.x = col * length
         self.y = row * length
-        self.color = WHITE
+        self.color = GRAY
         self.neighbors = []
         self.length = length
         self.total_rows = total_rows
@@ -45,7 +45,7 @@ class Node:
         return self.color == TURQUOISE
 
     def reset(self):
-        self.color = WHITE
+        self.color = GRAY
 
     def make_start(self):
         self.color = ORANGE
@@ -109,19 +109,17 @@ class SquareBoard(Board):
     
     def draw_grid(self, win):
         for i in range(self.rows):
-            pygame.draw.line(win, GRAY, (0, i * self.length), (self.cols * self.length, i * self.length))
+            pygame.draw.line(win, BLACK, (0, i * self.length), (self.cols * self.length, i * self.length))
 
         for j in range(self.cols):
-            pygame.draw.line(win, GRAY, (j * self.length, 0), (j * self.length, self.rows * self.length))
+            pygame.draw.line(win, BLACK, (j * self.length, 0), (j * self.length, self.rows * self.length))
 
     # Draw the grid and its elements
     def draw(self, win):
         win.fill(WHITE)
-
-        for row in self.grid:
-            for node in row:
-                node.draw(win)
-
+        for ridx in range(self.rows):
+            for cidx in range(self.cols):
+                self.grid[ridx][cidx].draw(win)
         self.draw_grid(win)
         pygame.display.update()
 
