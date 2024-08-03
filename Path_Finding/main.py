@@ -1,13 +1,10 @@
 import sys
+import random
 import pygame
 import argparse
-from square import Node
 from a_star import a_star_algorithm
-from typing import List
-from icecream import ic
 from square import SquareBoard
 from hex import HexBoard
-import random
 
 def main(win, board):
     board.make_grid()
@@ -38,7 +35,7 @@ def main(win, board):
                 row_col = board.get_clicked_pos(pos)
                 if row_col is not None:
                     row, col = row_col
-                    node: Node = board.grid[row][col]
+                    node = board.grid[row][col]
 
                     # set start
                     if not start and node != end:
@@ -54,7 +51,7 @@ def main(win, board):
                 row_col = board.get_clicked_pos(pos)
                 if row_col is not None:
                     row, col = row_col
-                    node: Node = board.grid[row][col]
+                    node = board.grid[row][col]
                     node.reset()
                     if node == start:
                         start = None

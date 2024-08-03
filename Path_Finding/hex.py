@@ -2,7 +2,6 @@ import pygame, math
 from board import Board
 from shapely.geometry import Point, Polygon
 from typing import List, Tuple
-from icecream import ic
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)

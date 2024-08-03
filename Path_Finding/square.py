@@ -1,7 +1,6 @@
 import pygame
 from board import Board
 from typing import List, Tuple
-from icecream import ic
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)

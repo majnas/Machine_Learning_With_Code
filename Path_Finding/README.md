@@ -14,7 +14,9 @@ Random End Point: Automatically sets a random end point for the pathfinding.
 
 Install dependencies using pip:
 ```sh
-pip install pygame icecream shapely
+pip install pygame shapely
+or 
+pip install -r rerequirements.txt
 ```
 
 ### Usage

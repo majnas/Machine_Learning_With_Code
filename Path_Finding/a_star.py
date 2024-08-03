@@ -1,10 +1,7 @@
 import pygame
-import math
 from queue import PriorityQueue
 from square import Node
 from typing import List, Tuple
-from icecream import ic
-from time import sleep
 
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
