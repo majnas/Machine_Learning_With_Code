@@ -15,6 +15,7 @@ def main(win, board):
     # end = None
 
     end_row, end_col = random.randint(0, board.rows - 1), random.randint(0, board.cols - 1)
+    end_row, end_col = 12, 5
     end = board.grid[end_row][end_col]
     end.make_end()
 
@@ -45,11 +46,6 @@ def main(win, board):
                         start = node
                         start.make_start()
 
-                    # # set end
-                    # elif not end and node != start:
-                    #     end = node
-                    #     end.make_end()
-
                     # set barrier
                     elif node != end and node != start:
                         node.make_barrier()
@@ -63,8 +59,6 @@ def main(win, board):
                     node.reset()
                     if node == start:
                         start = None
-                    # elif node == end:
-                    #     end = None
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and start:# and end:
@@ -77,8 +71,6 @@ def main(win, board):
                 if event.key == pygame.K_c:
                     start = None
                     board.make_grid()
-
-                    # end = None
                     end_row, end_col = random.randint(0, board.rows - 1), random.randint(0, board.cols - 1)
                     end = board.grid[end_row][end_col]
                     end.make_end()
@@ -107,6 +99,7 @@ if __name__ == "__main__":
 
     win = pygame.display.set_mode((board.width, board.height))
     pygame.display.set_caption("A* Path Finding Algorithm Visualization")
+    pygame.font.init()  # Initialize the font module
 
     # main(win, board, ROWS, COLS, LENGTH, -1)
     main(win, board)

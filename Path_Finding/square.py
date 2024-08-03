@@ -1,6 +1,6 @@
 import pygame
 from board import Board
-from typing import List
+from typing import List, Tuple
 from icecream import ic
 
 WHITE = (255, 255, 255)
@@ -21,7 +21,7 @@ class Node:
         self.x = col * length
         self.y = row * length
         self.color = GRAY
-        self.neighbors = []
+        self.neighbors: List[Tuple[float, Node]] = []
         self.length = length
         self.total_rows = total_rows
         self.total_cols = total_cols
@@ -69,18 +69,30 @@ class Node:
         pygame.draw.rect(win, self.color, (self.x, self.y, self.length, self.length))
 
     def update_neighbors(self, grid: List[List["Node"]]):
-        self.neighbors: List[Node] = []
-        if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].is_barrier(): # Down
-            self.neighbors.append(grid[self.row + 1][self.col])
-
+        self.neighbors.clear()
         if self.row > 0 and not grid[self.row - 1][self.col].is_barrier(): # Up
-            self.neighbors.append(grid[self.row - 1][self.col])
+            self.neighbors.append((1.0, grid[self.row - 1][self.col]))
+
+        if self.row > 0 and self.col < self.total_cols -1 and not grid[self.row - 1][self.col + 1].is_barrier(): # Up-right
+            self.neighbors.append((1.41, grid[self.row - 1][self.col + 1]))
 
         if self.col < self.total_cols - 1 and not grid[self.row][self.col + 1].is_barrier(): # Right
-            self.neighbors.append(grid[self.row][self.col + 1])
+            self.neighbors.append((1.0, grid[self.row][self.col + 1]))
+
+        if self.row < self.total_rows - 1 and self.col < self.total_cols - 1 and not grid[self.row + 1][self.col + 1].is_barrier(): # Down-Right
+            self.neighbors.append((1.41, grid[self.row + 1][self.col + 1]))
+
+        if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].is_barrier(): # Down
+            self.neighbors.append((1.0, grid[self.row + 1][self.col]))
+
+        if self.col > 0 and self.row < self.total_rows - 1 and not grid[self.row + 1][self.col - 1].is_barrier(): # Down-Left
+            self.neighbors.append((1.41, grid[self.row + 1][self.col - 1]))
 
         if self.col > 0 and not grid[self.row][self.col - 1].is_barrier(): # Left
-            self.neighbors.append(grid[self.row][self.col - 1])
+            self.neighbors.append((1.0, grid[self.row][self.col - 1]))
+
+        if self.row > 0 and self.col > 0 and not grid[self.row - 1][self.col - 1].is_barrier(): # Up-Left
+            self.neighbors.append((1.41, grid[self.row - 1][self.col - 1]))
 
     def __lt__(self, other):
         return False

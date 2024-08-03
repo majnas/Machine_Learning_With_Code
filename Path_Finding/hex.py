@@ -1,7 +1,7 @@
 import pygame, math
 from board import Board
 from shapely.geometry import Point, Polygon
-from typing import List
+from typing import List, Tuple
 from icecream import ic
 
 WHITE = (255, 255, 255)
@@ -21,7 +21,7 @@ class Node:
         self.col = col
         self.length = length
         self.color = GRAY
-        self.neighbors = []
+        self.neighbors: List[Tuple[float, Node]] = []
         self.total_rows = total_rows
         self.total_cols = total_cols
 
@@ -33,8 +33,6 @@ class Node:
             self.y = 2 * (row + 1) * hex_sin_len
 
         self.points = [(x + self.x, y + self.y) for x, y in hex_polygon]
-        # self.tiel_rect = pygame.Rect(0, 0, length * 2, hex_sin_len * 2)
-        # self.tiel_rect.center = (self.x, self.y)
 
     def get_pos(self):
         return self.row, self.col
@@ -78,30 +76,43 @@ class Node:
     def make_path(self):
         self.color = PURPLE
 
-
     def draw(self, win):
         pygame.draw.polygon(win, self.color, self.points)
 
     def update_neighbors(self, grid: List[List["Node"]]):
-        self.neighbors: List[Node] = []
+        self.neighbors.clear()
 
         if self.row > 0 and not grid[self.row - 1][self.col].is_barrier(): # Up
-            self.neighbors.append(grid[self.row - 1][self.col])
+            self.neighbors.append((1.0, grid[self.row - 1][self.col]))
 
-        if self.col > 0 and not grid[self.row][self.col - 1].is_barrier(): # Up-Left
-            self.neighbors.append(grid[self.row][self.col - 1])
+        if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].is_barrier(): # Down
+            self.neighbors.append((1.0, grid[self.row + 1][self.col]))
 
-        if self.col < self.total_cols - 1 and not grid[self.row][self.col + 1].is_barrier(): # Up-Right
-            self.neighbors.append(grid[self.row][self.col + 1])
+        if self.col % 2 == 0:
+            if self.row > 0 and self.col < self.total_cols - 1 and not grid[self.row - 1][self.col + 1].is_barrier(): # Up-Right
+                self.neighbors.append((1.0, grid[self.row - 1][self.col + 1]))
 
-        if self.row < self.total_rows - 1 and self.col > 0 and not grid[self.row + 1][self.col - 1].is_barrier(): # Bottom-Left
-            self.neighbors.append(grid[self.row + 1][self.col - 1])
+            if self.col < self.total_cols - 1 and not grid[self.row][self.col + 1].is_barrier(): # Down-Right
+                self.neighbors.append((1.0, grid[self.row ][self.col + 1]))
 
-        if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].is_barrier(): # Bottom
-            self.neighbors.append(grid[self.row + 1][self.col])
+            if self.col > 0 and not grid[self.row][self.col - 1].is_barrier(): # Down-Left
+                self.neighbors.append((1.0, grid[self.row][self.col - 1]))
 
-        if self.row < self.total_rows - 1 and self.col < self.total_cols - 1 and not grid[self.row + 1][self.col + 1].is_barrier(): # Bottom-Right
-            self.neighbors.append(grid[self.row + 1][self.col + 1])
+            if self.row > 0 and self.col > 0 and not grid[self.row - 1][self.col - 1].is_barrier(): # Up-Left
+                self.neighbors.append((1.0, grid[self.row - 1][self.col - 1]))
+        else:        
+            if self.col < self.total_cols - 1 and not grid[self.row][self.col + 1].is_barrier(): # Up-Right
+                self.neighbors.append((1.0, grid[self.row][self.col + 1]))
+
+            if self.row < self.total_rows - 1 and self.col < self.total_cols - 1 and not grid[self.row + 1][self.col + 1].is_barrier(): # Down-Right
+                self.neighbors.append((1.0, grid[self.row + 1][self.col + 1]))
+
+            if self.row < self.total_rows - 1 and self.col > 0 and not grid[self.row + 1][self.col - 1].is_barrier(): # Down-Left
+                self.neighbors.append((1.0, grid[self.row + 1][self.col - 1]))
+
+            if self.col > 0 and not grid[self.row][self.col - 1].is_barrier(): # Up-Left
+                self.neighbors.append((1.0, grid[self.row][self.col - 1]))
+
 
     def __str__(self) -> str:
         return f"({self.row, self.col}) xy=({self.x, self.y}, c={self.color})"
@@ -114,8 +125,8 @@ class HexBoard(Board):
         self.cols = cols
         self.length = length
         self.grid: List[List["Node"]] = []
-        self.width = 100
-        self.height = 100
+        self.width = None
+        self.height = None
 
     def make_grid(self):
         hex_sin_len = math.sin(math.radians(60)) * self.length
@@ -141,7 +152,7 @@ class HexBoard(Board):
         for row in self.grid:
             for node in row:
                 for i in range(len(node.points)):
-                    pygame.draw.line(win, BLACK, node.points[i], node.points[(i + 1) % len(node.points)], 1)
+                    pygame.draw.line(win, BLACK, node.points[i], node.points[(i + 1) % len(node.points)], 2)
 
     def draw(self, win):
         win.fill(WHITE)

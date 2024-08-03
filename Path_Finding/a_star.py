@@ -1,4 +1,5 @@
 import pygame
+import math
 from queue import PriorityQueue
 from square import Node
 from typing import List, Tuple
@@ -34,7 +35,6 @@ def a_star_algorithm(draw, grid: List[List[Node]], start: Node, end: Node):
 
     open_set_hash = {start}
 
-    loop = 0
     while not open_set.empty():        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -48,21 +48,21 @@ def a_star_algorithm(draw, grid: List[List[Node]], start: Node, end: Node):
             end.make_end()
             return True
 
-        for neighbor in current.neighbors:
-            temp_g_score = g_score[current] + 1
-
+        for g, neighbor in current.neighbors:
+            temp_g_score = g_score[current] + g
             if temp_g_score < g_score[neighbor]:
                 came_from[neighbor] = current
                 g_score[neighbor] = temp_g_score
                 f_score[neighbor] = temp_g_score + h(neighbor.get_pos(), end.get_pos())
+
                 if neighbor not in open_set_hash:
                     count += 1
                     open_set.put((f_score[neighbor], count, neighbor))
                     open_set_hash.add(neighbor)
                     neighbor.make_open()
-
-        draw()
         
+        draw()
+
         if current != start:
             current.make_closed()
 
