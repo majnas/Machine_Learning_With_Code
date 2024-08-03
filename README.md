@@ -1,6 +1,7 @@
 # Machine_Learning_With_Code
 Basic Machine Learning Algorithms With Code
 
+- [x] [Path Finding](https://github.com/majnas/Machine_Learning_With_Code/tree/master/Path_Finding)
 - [x] [Hidden Markov Model](https://github.com/majnas/Machine_Learning_With_Code/tree/master/Hidden_Markov_Model)
 - [x] [Kalman-Filter](https://github.com/majnas/Machine_Learning_With_Code/tree/master/Kalamn_Filter)
 - [ ] [Extended Kalman-Filter]()
@@ -9,6 +10,11 @@ Basic Machine Learning Algorithms With Code
 - [ ] [Independent Component Analysis]()
 - [ ] [Genetic Algorithm]()
 
+
+# Path Finding
+<div align="center">
+  <kbd style="width: 2px"><img src="./Path_Finding/images/Astar_hex.gif" width="125%"></kbd>
+</div>
 
 
 # Hidden_Markov_Model
