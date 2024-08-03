@@ -1,6 +1,17 @@
 # A* Pathfinding Algorithm Visualization
 This project implements the A* pathfinding algorithm to find the shortest path from a start cell to an end cell on either a square or hexagonal board. The visualization is done using the Pygame library.
 
+## Visualization of A algorithm on a hexagonal grid.*
+<div align="center">
+  <img src="./images/Astar_hex.gif" alt="Hex Grid" width="125%">
+</div>
+
+## Visualization of A algorithm on a square grid.*
+<div align="center">
+  <img src="./images/Astar_square.gif" alt="Hex Grid" width="125%">
+</div>
+
+
 ### Features
 A Algorithm*: Implements the A* algorithm for pathfinding.
 Hexagonal and Square Grids: Supports both hexagonal and square grid visualizations.
@@ -52,11 +63,14 @@ python main.py square -r 10 -c 20 -l 30
 - square.py: Implements the square grid and node.
 Visual Demonstration
 
-## Visualization of A algorithm on a square grid.*
-
-
-## Visualization of A algorithm on a hexagonal grid.*
-
+## Colors in Visualization
+- White: Unvisited cells.
+- Black: Barrier cells that the path cannot cross.
+- Orange: The start cell.
+- Green: The end cell.
+- Blue: Cells that are in the open set, meaning they are being considered for the path.
+- Gold: Cells that have been visited and are in the closed set.
+- Red: Cells that form the final path from the start cell to the end cell.
 
 ## Contributing
 Feel free to open issues or submit pull requests if you find any bugs or have suggestions for improvements.
