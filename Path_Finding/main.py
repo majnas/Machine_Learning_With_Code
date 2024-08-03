@@ -15,7 +15,6 @@ def main(win, board):
     # end = None
 
     end_row, end_col = random.randint(0, board.rows - 1), random.randint(0, board.cols - 1)
-    end_row, end_col = 12, 5
     end = board.grid[end_row][end_col]
     end.make_end()
 

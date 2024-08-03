@@ -5,14 +5,12 @@ from icecream import ic
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
+BLUE = (135,206,235)
 ORANGE = (255, 165, 0)
-TURQUOISE = (64, 224, 208)
-PURPLE = (128, 0, 128)
-YELLOW = (255, 211, 0)
+GREEN = (0,100,0)
 GRAY = (142, 142, 142)
-
+RED = (255, 0, 0)
+GOLD = (255,215,0)
 
 class Node:
     def __init__(self, row, col, length, total_rows, total_cols):
@@ -30,19 +28,19 @@ class Node:
         return self.row, self.col
 
     def is_closed(self):
-        return self.color == RED
+        return self.color == GOLD
 
     def is_open(self):
-        return self.color == GREEN
+        return self.color == BLUE
 
     def is_barrier(self):
         return self.color == BLACK
 
     def is_start(self):
         return self.color == ORANGE
-
+    
     def is_end(self):
-        return self.color == TURQUOISE
+        return self.color == GREEN
 
     def reset(self):
         self.color = GRAY
@@ -51,19 +49,19 @@ class Node:
         self.color = ORANGE
 
     def make_closed(self):
-        self.color = RED
+        self.color = GOLD
 
     def make_open(self):
-        self.color = GREEN
+        self.color = BLUE
 
     def make_barrier(self):
         self.color = BLACK
 
     def make_end(self):
-        self.color = TURQUOISE
+        self.color = GREEN
 
     def make_path(self):
-        self.color = PURPLE
+        self.color = RED
 
     def draw(self, win):
         pygame.draw.rect(win, self.color, (self.x, self.y, self.length, self.length))
